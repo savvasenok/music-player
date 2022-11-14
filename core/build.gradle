@@ -1,22 +1,18 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'dagger.hilt.android.plugin'
-    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.musicplayer'
+    namespace 'xyz.savvamirzoyan.musicplayer.core'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
-        applicationId "xyz.savvamirzoyan.musicplayer"
         minSdk rootProject.minSdkVersion
         targetSdk rootProject.targerSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -35,10 +31,7 @@ android {
 }
 
 dependencies {
-
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT
-    kapt HILT_COMPILER
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation CORE_DEPS, HILT
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT
     androidTestImplementation ESPRESSO

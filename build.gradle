@@ -1,6 +1,87 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+
+    ext {
+
+        versionCode = 1
+        versionName = "1.0"
+
+        compileSdkVersion = 33
+        minSdkVersion = 23
+        targerSdkVersion = 33
+
+        kotlinVersion = "1.6.10"
+        coroutinesVersion = "1.6.3"
+        navigationVersion = "2.5.2"
+        lifecycleVersion = "2.5.1"
+        hiltVersion = "2.42"
+        fragmentsVersion = "1.5.2"
+        androidxCoreKtxVersion = "1.9.0"
+        roomVersion = "2.4.3"
+        firebaseBomVersion = "30.3.1"
+        okHttpVersion = "4.10.0"
+        retrofitVersion = "2.9.0"
+        appcompatVersion = "1.5.1"
+        glideVersion = "4.12.0"
+        materialDesignVersion = "1.7.0"
+        junitVersion = "4.13.2"
+        testExtJunitVersion = "1.1.4"
+        junitVersion = "4.13.2"
+        espressoVersion = "3.5.0"
+
+        HILT = "com.google.dagger:hilt-android:$hiltVersion"
+        HILT_COMPILER = "com.google.dagger:hilt-android-compiler:$hiltVersion"
+        COROUTINES_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+        NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+        NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+        LIFECYCLE_VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+        LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+        FRAGMENTS = "androidx.fragment:fragment-ktx:$fragmentsVersion"
+        ANDROIDX_CORE_KTX = "androidx.core:core-ktx:$androidxCoreKtxVersion"
+        ROOM = "androidx.room:room-runtime:$roomVersion"
+        FIREBASE_BOM = "com.google.firebase:firebase-bom:$firebaseBomVersion"
+        FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+        OKHTTP = "com.squareup.okhttp3:okhttp:$okHttpVersion"
+        OKHTTP_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+        RETROFIT = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+        GLIDE = "com.github.bumptech.glide:glide:$glideVersion"
+        APPCOMPAT = "androidx.appcompat:appcompat:$appcompatVersion"
+        MATERIAL_DESIGN = "com.google.android.material:material:$materialDesignVersion"
+        JUNIT = "junit:junit:$junitVersion"
+        TEST_EXT_JUNIT = "androidx.test.ext:junit:$testExtJunitVersion"
+        ESPRESSO = "androidx.test.espresso:espresso-core:$espressoVersion"
+
+        CORE_DEPS = [COROUTINES_ANDROID]
+        CORE_FEATURE_DEPS = (
+                [
+                        MATERIAL_DESIGN, LIFECYCLE_VIEWMODEL, LIFECYCLE_RUNTIME,
+                        FRAGMENTS, ANDROIDX_CORE_KTX, NAVIGATION_FRAGMENT,
+                        NAVIGATION_UI, GLIDE, HILT
+                ]
+                        + CORE_DEPS
+        ).flatten()
+        CORE_USECASE_DEPS = CORE_DEPS + HILT
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.42'
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.3.1' apply false
     id 'com.android.library' version '7.3.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+    id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
+    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" apply false
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
