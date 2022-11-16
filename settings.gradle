@@ -16,3 +16,4 @@ rootProject.name = "Music Player"
 include ':app'
 include ':core'
 include ':appcore'
+include ':feature-home'

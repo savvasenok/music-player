@@ -32,11 +32,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
 
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT
+    implementation project(":feature-home")
+
+    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
     kapt HILT_COMPILER
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation JUNIT

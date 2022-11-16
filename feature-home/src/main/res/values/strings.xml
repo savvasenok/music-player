@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_whats_new_title">What\'s new</string>
+    <string name="home_recently_played_title">Recently played</string>
+    <string name="home_settings_title">Settings</string>
+</resources>
