@@ -8,14 +8,18 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.ToolbarChipsStateUi
 import xyz.savvamirzoyan.musicplayer.usecasedatetime.DateTimeUseCase
+import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.PlayHistoryUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     private val datetimeUseCase: DateTimeUseCase,
     private val currentPartOfDayToTextValueMapper: CurrentPartOfDayToTextValueMapper,
+    private val playHistoryUseCase: PlayHistoryUseCase,
+    private val lastPlayedPlaylistToLastPlaylistsStateMapper: LastPlayedPlaylistToLastPlaylistsStateMapper
 ) : CoreViewModel() {
 
     private val initToolbarChipsState = ToolbarChipsStateUi(
@@ -37,6 +41,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         setupGreetings()
+        setupLastPlayedPlaylists()
     }
 
     private fun setupGreetings() {
@@ -44,6 +49,14 @@ class HomeViewModel @Inject constructor(
             val responseDomain = datetimeUseCase.getCurrentPartOfTheDay()
             val textValue = currentPartOfDayToTextValueMapper.map(responseDomain)
             _toolbarGreetingTextFlow.emit(textValue)
+        }
+    }
+
+    private fun setupLastPlayedPlaylists() {
+        viewModelScope.launch {
+            val responseDomain = playHistoryUseCase.getLastPlayedPlaylists()
+            val playlists = lastPlayedPlaylistToLastPlaylistsStateMapper.map(responseDomain)
+            _playlistsStateFlow.emit(playlists)
         }
     }
 }

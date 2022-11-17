@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/feature-home" />
             <option value="$PROJECT_DIR$/usecase-datetime" />
+            <option value="$PROJECT_DIR$/usecase-play-history" />
           </set>
         </option>
       </GradleProjectSettings>

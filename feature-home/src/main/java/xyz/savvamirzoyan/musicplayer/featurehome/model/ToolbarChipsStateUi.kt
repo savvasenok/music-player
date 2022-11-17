@@ -1,6 +1,6 @@
 package xyz.savvamirzoyan.musicplayer.featurehome.model
 
-import xyz.savvamirzoyan.musicplayer.core.mapper.Model
+import xyz.savvamirzoyan.musicplayer.core.Model
 
 internal data class ToolbarChipsStateUi(
     val isCancelChipVisible: Boolean,

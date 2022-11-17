@@ -11,4 +11,7 @@ interface FeatureHomeHiltModule {
 
     @Binds
     fun bindCurrentPartOfDayToTextValueMapper(base: CurrentPartOfDayToTextValueMapper.Base): CurrentPartOfDayToTextValueMapper
+
+    @Binds
+    fun bindLastPlayedPlaylistToLastPlaylistsStateMapper(base: LastPlayedPlaylistToLastPlaylistsStateMapper.Base): LastPlayedPlaylistToLastPlaylistsStateMapper
 }

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
-import xyz.savvamirzoyan.musicplayer.core.mapper.Model
+import xyz.savvamirzoyan.musicplayer.core.Model
 
 interface CoreViewHolderFingerprint<V : ViewBinding, I : Model.Ui> {
 

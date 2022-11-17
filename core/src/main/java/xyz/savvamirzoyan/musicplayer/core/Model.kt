@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.musicplayer.core.mapper
+package xyz.savvamirzoyan.musicplayer.core
 
 sealed interface Model {
     interface Ui : Model

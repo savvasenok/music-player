@@ -67,7 +67,8 @@ class MusicPlayingView @JvmOverloads constructor(
         canvas?.drawRect(2 * (barWidth + gapWidth), thirdBarHeight, 3 * barWidth + 2 * gapWidth, barHeightMax, paint)
 
         calculateHeight()
-//
+
+        // This looks kinda sus :/
         handler.postDelayed(::invalidate, 30)
     }
 

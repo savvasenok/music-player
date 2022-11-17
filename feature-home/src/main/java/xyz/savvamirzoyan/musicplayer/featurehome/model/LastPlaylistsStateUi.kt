@@ -1,10 +1,10 @@
-package xyz.savvamirzoyan.musicplayer.featurehome
+package xyz.savvamirzoyan.musicplayer.featurehome.model
 
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
-import xyz.savvamirzoyan.musicplayer.core.mapper.Model
-import xyz.savvamirzoyan.musicplayer.core.mapper.PictureUrl
+import xyz.savvamirzoyan.musicplayer.core.Model
+import xyz.savvamirzoyan.musicplayer.core.PictureUrl
 
-internal data class LastPlaylistsStateUi(
+data class LastPlaylistsStateUi(
     val first: LastPlaylistStateUi? = null,
     val second: LastPlaylistStateUi? = null,
     val third: LastPlaylistStateUi? = null,
@@ -21,7 +21,7 @@ internal data class LastPlaylistsStateUi(
     val isSixthVisible = sixth != null
 }
 
-internal data class LastPlaylistStateUi(
+data class LastPlaylistStateUi(
     val pictureUrl: PictureUrl?,
     val title: TextValue,
     val isPlaying: Boolean

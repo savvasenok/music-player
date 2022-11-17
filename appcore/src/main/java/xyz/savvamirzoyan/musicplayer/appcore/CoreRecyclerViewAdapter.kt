@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import xyz.savvamirzoyan.musicplayer.core.mapper.Model
+import xyz.savvamirzoyan.musicplayer.core.Model
 
 class CoreRecyclerViewAdapter(
     private val fingerprints: List<CoreViewHolderFingerprint<*, *>>,
