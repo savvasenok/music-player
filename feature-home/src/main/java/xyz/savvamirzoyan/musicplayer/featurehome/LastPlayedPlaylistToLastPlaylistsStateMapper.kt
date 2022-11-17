@@ -3,7 +3,7 @@ package xyz.savvamirzoyan.musicplayer.featurehome
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
-import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.LastPlayedPlaylistDomain
+import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.model.LastPlayedPlaylistDomain
 import javax.inject.Inject
 
 interface LastPlayedPlaylistToLastPlaylistsStateMapper {
@@ -17,7 +17,7 @@ interface LastPlayedPlaylistToLastPlaylistsStateMapper {
                 LastPlaylistStateUi(
                     title = TextValue.AsString(it.title),
                     pictureUrl = it.pictureUrl,
-                    isPlaying = true
+                    isPlaying = it.id == 0
                 )
             }.let {
                 LastPlaylistsStateUi(

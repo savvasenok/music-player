@@ -33,6 +33,13 @@ class CoreRecyclerViewAdapter(
 
     override fun getItemCount() = items.size
 
+    override fun getItemViewType(position: Int): Int {
+        val item = items[position]
+        return fingerprints.find { it.isRelativeItem(item) }
+            ?.getLayoutRes()
+            ?: throw IllegalArgumentException()
+    }
+
     fun update(newItems: List<Model.Ui>) {
         val diffCallback = diffUtilCallbackGetter.get(old = items, new = newItems)
         val diffResult = DiffUtil.calculateDiff(diffCallback)

@@ -8,4 +8,5 @@
     <string name="greetings_morning">Good morning</string>
     <string name="greetings_afternoon">Good afternoon</string>
     <string name="greetings_evening">Good evening</string>
+    <string name="jump_back_in">Jump back in</string>
 </resources>

@@ -1,13 +1,13 @@
-package xyz.savvamirzoyan.musicplayer.usecaseplayhistory
+package xyz.savvamirzoyan.musicplayer.usecaseplayhistory.model
 
 import xyz.savvamirzoyan.musicplayer.core.ID
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.core.PictureUrl
-import xyz.savvamirzoyan.musicplayer.core.UTC
 
-data class LastPlayedPlaylistDomain(
+data class LastPlayedSongDomain(
     val id: ID,
     val title: String,
-    val pictureUrl: PictureUrl?,
-    val lastPlayedTimeUTC: UTC
+    val artist: String,
+    val albumPictureUrl: PictureUrl,
+    val isExplicit: Boolean
 ) : Model.Domain

@@ -6,13 +6,34 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.savvamirzoyan.musicplayer.appcore.CoreDiffUtilsGetter
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
+import xyz.savvamirzoyan.musicplayer.appcore.CoreRecyclerViewAdapter
 import xyz.savvamirzoyan.musicplayer.appcore.load
+import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.featurehome.databinding.FragmentHomeBinding
+import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlayedSongFingerprint
 
 @AndroidEntryPoint
 class HomeFragment : CoreFragment<FragmentHomeBinding>() {
+
+    private val adapter by lazy {
+        CoreRecyclerViewAdapter(
+            fingerprints = listOf(LastPlayedSongFingerprint()),
+            diffUtilCallbackGetter = object : CoreDiffUtilsGetter {
+                override fun get(old: List<Model.Ui>, new: List<Model.Ui>): DiffUtil.Callback =
+                    object : DiffUtil.Callback() {
+                        override fun getOldListSize() = old.size
+                        override fun getNewListSize() = new.size
+                        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
+                        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
+                    }
+            }
+        )
+    }
 
     private val viewModel by viewModels<HomeViewModel>()
 
@@ -25,6 +46,7 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         setupFlowListeners()
+        setupLastSongsRecyclerView()
     }
 
     private fun setupFlowListeners() {
@@ -85,5 +107,17 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
             binding.chipPodcastsAndShows.isVisible = it.isPodcastsAndShowsChipVisible
             binding.chipPodcastsAndShows.isSelected = it.isPodcastsAndShowsChipSelected
         }
+        collect(viewModel.lastPlayedSongsStateFlow) {
+            adapter.update(it.songs)
+        }
+        collect(viewModel.isLastSongsSectionVisible) {
+            binding.sectionLastPlayedSongs.isVisible = it
+        }
+    }
+
+    private fun setupLastSongsRecyclerView() {
+        binding.rvLastPlayedSongs.adapter = adapter
+        binding.rvLastPlayedSongs.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvLastPlayedSongs.addItemDecoration(LastPlayedSongItemDecoration(resources.displayMetrics.density))
     }
 }
