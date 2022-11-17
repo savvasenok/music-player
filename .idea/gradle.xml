@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/appcore" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/feature-home" />
+            <option value="$PROJECT_DIR$/usecase-datetime" />
           </set>
         </option>
       </GradleProjectSettings>

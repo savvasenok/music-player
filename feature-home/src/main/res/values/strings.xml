@@ -3,4 +3,9 @@
     <string name="home_whats_new_title">What\'s new</string>
     <string name="home_recently_played_title">Recently played</string>
     <string name="home_settings_title">Settings</string>
+
+    <string name="test_string">%s is %d years old</string>
+    <string name="greetings_morning">Good morning</string>
+    <string name="greetings_afternoon">Good afternoon</string>
+    <string name="greetings_evening">Good evening</string>
 </resources>

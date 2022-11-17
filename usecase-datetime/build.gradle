@@ -1,10 +1,12 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.musicplayer.core'
+    namespace 'xyz.savvamirzoyan.musicplayer.usecasedatetime'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
@@ -31,7 +33,12 @@ android {
 }
 
 dependencies {
-    implementation CORE_DEPS, HILT
+
+    implementation project(":core")
+
+    implementation ANDROIDX_CORE_KTX, HILT
+    kapt HILT_COMPILER
+
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT
     androidTestImplementation ESPRESSO

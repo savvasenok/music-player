@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "xyz.savvamirzoyan.musicplayer"
         minSdk rootProject.minSdkVersion
-        targetSdk rootProject.targerSdkVersion
+        targetSdk rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
 

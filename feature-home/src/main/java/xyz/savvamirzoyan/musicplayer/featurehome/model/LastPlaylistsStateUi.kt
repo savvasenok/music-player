@@ -1,5 +1,6 @@
 package xyz.savvamirzoyan.musicplayer.featurehome
 
+import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.core.mapper.Model
 import xyz.savvamirzoyan.musicplayer.core.mapper.PictureUrl
 
@@ -21,7 +22,7 @@ internal data class LastPlaylistsStateUi(
 }
 
 internal data class LastPlaylistStateUi(
-    val pictureUrl: PictureUrl,
-    val title: String,
+    val pictureUrl: PictureUrl?,
+    val title: TextValue,
     val isPlaying: Boolean
 ) : Model.Ui

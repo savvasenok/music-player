@@ -8,7 +8,7 @@ buildscript {
 
         compileSdkVersion = 33
         minSdkVersion = 23
-        targerSdkVersion = 33
+        targetSdkVersion = 33
 
         kotlinVersion = "1.6.10"
         coroutinesVersion = "1.6.3"

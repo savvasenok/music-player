@@ -39,39 +39,51 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
             if (state.isFirstVisible) {
                 binding.playlist1.ivPicture.load(state.first?.pictureUrl)
-                binding.playlist1.tvTitle.text = state.first?.title
+                binding.playlist1.tvTitle.text = state.first?.title?.get(requireContext())
                 binding.playlist1.indicatorMusicPlaying.isVisible = state.first?.isPlaying ?: false
             }
 
             if (state.isSecondVisible) {
                 binding.playlist2.ivPicture.load(state.second?.pictureUrl)
-                binding.playlist2.tvTitle.text = state.second?.title
+                binding.playlist2.tvTitle.text = state.second?.title?.get(requireContext())
                 binding.playlist2.indicatorMusicPlaying.isVisible = state.second?.isPlaying ?: false
             }
 
             if (state.isThirdVisible) {
                 binding.playlist3.ivPicture.load(state.third?.pictureUrl)
-                binding.playlist3.tvTitle.text = state.third?.title
+                binding.playlist3.tvTitle.text = state.third?.title?.get(requireContext())
                 binding.playlist3.indicatorMusicPlaying.isVisible = state.third?.isPlaying ?: false
             }
 
             if (state.isFourthVisible) {
                 binding.playlist4.ivPicture.load(state.fourth?.pictureUrl)
-                binding.playlist4.tvTitle.text = state.fourth?.title
+                binding.playlist4.tvTitle.text = state.fourth?.title?.get(requireContext())
                 binding.playlist4.indicatorMusicPlaying.isVisible = state.fourth?.isPlaying ?: false
             }
 
             if (state.isFifthVisible) {
                 binding.playlist5.ivPicture.load(state.fifth?.pictureUrl)
-                binding.playlist5.tvTitle.text = state.fifth?.title
+                binding.playlist5.tvTitle.text = state.fifth?.title?.get(requireContext())
                 binding.playlist5.indicatorMusicPlaying.isVisible = state.fifth?.isPlaying ?: false
             }
 
             if (state.isSixthVisible) {
                 binding.playlist6.ivPicture.load(state.sixth?.pictureUrl)
-                binding.playlist6.tvTitle.text = state.sixth?.title
+                binding.playlist6.tvTitle.text = state.sixth?.title?.get(requireContext())
                 binding.playlist6.indicatorMusicPlaying.isVisible = state.sixth?.isPlaying ?: false
             }
+        }
+        collect(viewModel.toolbarGreetingTextFlow) {
+            binding.tvToolbarGreetings.text = it.get(requireContext())
+        }
+        collect(viewModel.toolbarChipsStateFlow) {
+            binding.chipClear.isVisible = it.isCancelChipVisible
+
+            binding.chipMusic.isVisible = it.isMusicChipVisible
+            binding.chipMusic.isSelected = it.isMusicSelected
+
+            binding.chipPodcastsAndShows.isVisible = it.isPodcastsAndShowsChipVisible
+            binding.chipPodcastsAndShows.isSelected = it.isPodcastsAndShowsChipSelected
         }
     }
 }

@@ -10,9 +10,9 @@ sealed interface TextValue : Model.Ui {
 
     data class AsResource(
         @StringRes val resourceId: Int,
-        val arguments: List<Any>
+        val arguments: List<Any> = emptyList()
     ) : TextValue {
-        override fun get(context: Context): String = context.getString(resourceId, arguments)
+        override fun get(context: Context): String = context.getString(resourceId, *arguments.toTypedArray())
     }
 
     data class AsString(
