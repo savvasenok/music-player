@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.featuremusicplayerservice.SongDomainToMediaMetadataMapper
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 
 class MusicPlaybackPreparer(
-//    private val deezerMusicSource: DeezerMusicSource,
     private val musicPlayerManager: UseCaseMusicPlayerManager,
     private val scope: CoroutineScope,
-    private val playerPrepared: (MediaMetadataCompat?) -> Unit
+    private val songDomainToMediaMetadataMapper: SongDomainToMediaMetadataMapper,
+    private val playerPrepared: (List<MediaMetadataCompat>) -> Unit
 ) : MediaSessionConnector.PlaybackPreparer {
 
     override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
@@ -29,33 +29,11 @@ class MusicPlaybackPreparer(
     override fun onPrepare(playWhenReady: Boolean) = Unit
 
     override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
-
-        Log.d("SPAMEGGS", "onPrepareFromMediaId(mediaId:$mediaId, playWhenReady:$playWhenReady)")
-
         scope.launch {
-            Log.d("SPAMEGGS", "launching coroutine in onPrepareFromMediaId")
-            musicPlayerManager.getSong(mediaId)
-                .let {
-                    Log.d("SPAMEGGS", "songDomain:$it")
-                    MediaMetadataCompat.Builder()
-                        .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, it.artist)
-                        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, it.id.toString())
-                        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, it.title)
-                        .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, it.title)
-                        .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, it.albumPictureUrl)
-                        .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, it.albumPictureUrl)
-                        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, it.songUrl)
-                        .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, it.artist)
-                        .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, it.artist)
-                        .build()
-                }
+            musicPlayerManager.getCurrentPlaylistFromMediaId(mediaId)
+                .map { songDomainToMediaMetadataMapper.map(it) }
                 .also { playerPrepared(it) }
         }
-
-//        val itemToPlay = deezerMusicSource.songs.find {
-//            mediaId == it.description.mediaId
-//        }
-//        playerPrepared(itemToPlay)
     }
 
     override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) = Unit

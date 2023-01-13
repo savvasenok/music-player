@@ -6,15 +6,15 @@ import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface SongDomainToSongMapper : Mapper {
+interface SongDomainToSongServiceMapper : Mapper {
 
     fun map(model: SongDomain): SongService
 
     @Singleton
-    class Base @Inject constructor() : SongDomainToSongMapper {
+    class Base @Inject constructor() : SongDomainToSongServiceMapper {
 
         override fun map(model: SongDomain) = SongService(
-            mediaId = model.id.toString(),
+            mediaId = model.id,
             artist = model.artist,
             title = model.title,
             albumUrl = model.albumPictureUrl,

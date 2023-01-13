@@ -12,13 +12,13 @@ interface SongDeezerDataToSongDomainMapper : Mapper {
     class Base @Inject constructor() : SongDeezerDataToSongDomainMapper {
 
         override fun map(model: SongDeezerData) = SongDomain(
-            id = model.id,
+            id = model.id.toString(),
             title = model.title,
             artist = model.artist.name,
             albumPictureUrl = model.album.coverMedium,
             isExplicit = model.explicitLyrics,
             songUrl = model.preview,
-            localCurrentPlaylistId = -1 // TODO
+            albumId = model.album.id.toString()
         )
     }
 }

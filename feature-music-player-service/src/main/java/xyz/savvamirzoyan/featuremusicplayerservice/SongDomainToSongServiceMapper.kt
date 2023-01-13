@@ -10,7 +10,7 @@ interface SongDomainToSongServiceMapper : Mapper {
 
     class Base @Inject constructor() : SongDomainToSongServiceMapper {
         override fun map(model: SongDomain) = SongService(
-            mediaId = model.id.toString(),
+            mediaId = model.id,
             artist = model.artist,
             title = model.title,
             albumUrl = model.albumPictureUrl,

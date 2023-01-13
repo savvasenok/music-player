@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package xyz.savvamirzoyan.featuremusicplayerservice
 
 import android.content.Context
@@ -24,9 +26,6 @@ import javax.inject.Singleton
 abstract class ServiceHiltModule {
 
     companion object {
-        @ServiceScoped
-        @Provides
-        fun provideMusicDatabase() = MusicDatabase()
 
         @ServiceScoped
         @Provides

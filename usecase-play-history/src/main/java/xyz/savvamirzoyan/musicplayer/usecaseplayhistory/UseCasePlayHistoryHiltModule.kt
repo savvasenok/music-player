@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package xyz.savvamirzoyan.musicplayer.usecaseplayhistory
 
 import dagger.Binds
@@ -10,6 +12,7 @@ import javax.inject.Singleton
 @Module
 interface UseCasePlayHistoryHiltModule {
 
+    @Singleton
     @Binds
     fun bindPlayHistoryUseCase(base: PlayHistoryUseCase.Base): PlayHistoryUseCase
 }

@@ -36,6 +36,7 @@ dependencies {
 
     implementation project(":core")
     api project(":usecase-core")
+    api project(":data-music-repository")
 
     implementation HILT, ANDROIDX_CORE_KTX, COROUTINES_ANDROID
     kapt HILT_COMPILER

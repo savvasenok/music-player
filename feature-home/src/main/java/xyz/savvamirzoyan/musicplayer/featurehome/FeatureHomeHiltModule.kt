@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package xyz.savvamirzoyan.musicplayer.featurehome
 
 import dagger.Binds
@@ -19,5 +21,5 @@ interface FeatureHomeHiltModule {
     fun bindLastPlayedSongDomainToUiMapper(base: SongDomainToUiMapper.Base): SongDomainToUiMapper
 
     @Binds
-    fun bindSongDomainToSongMapper(base: SongDomainToSongMapper.Base): SongDomainToSongMapper
+    fun bindSongDomainToSongMapper(base: SongDomainToSongServiceMapper.Base): SongDomainToSongServiceMapper
 }

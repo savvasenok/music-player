@@ -1,32 +1,32 @@
 package xyz.savvamirzoyan.musicplayer.usecaseplayermanager
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.zip
-import xyz.savvamirzoyan.musicplayer.core.ID
+import kotlinx.coroutines.flow.*
+import xyz.savvamirzoyan.musicplayer.core.StringID
+import xyz.savvamirzoyan.musicplayer.usecase_core.MusicRepository
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 
 interface UseCaseMusicPlayerManager {
 
-    suspend fun getSong(songId: String): SongDomain
-//    suspend fun getSong(songId: ID): SongDomain
-//    suspend fun getCurrentPlaylist(): List<SongDomain>
-//    suspend fun getCurrentSongIndex(): Int
+    var currentSongsPlaylist: List<SongDomain>
 
     val songsPlaylistFlow: Flow<List<SongDomain>>
     val currentSongIndexFlow: Flow<Int>
     val currentSongFlow: Flow<SongDomain>
 
-    suspend fun getSongs(playFromSongId: String, fromPlaylistId: ID): List<SongDomain>
-    suspend fun getSongs(playFromSongId: ID, fromPlaylistId: ID): List<SongDomain>
+    suspend fun getSong(songId: StringID): SongDomain
+    suspend fun getSongs(playFromSongId: String, fromPlaylistId: StringID): List<SongDomain>
+    suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain>
 
     class Base @Inject constructor(
         private val musicRepository: MusicRepository
     ) : UseCaseMusicPlayerManager {
 
+        override var currentSongsPlaylist: List<SongDomain> = emptyList()
+
         private val _songsPlaylistFlow = MutableSharedFlow<List<SongDomain>>(replay = 1)
         override val songsPlaylistFlow: Flow<List<SongDomain>> = _songsPlaylistFlow
+            .onEach { currentSongsPlaylist = it }
 
         private val _currentSongIndexFlow = MutableSharedFlow<Int>(replay = 1)
         override val currentSongIndexFlow: Flow<Int> = _currentSongIndexFlow
@@ -34,19 +34,21 @@ interface UseCaseMusicPlayerManager {
         override val currentSongFlow: Flow<SongDomain> =
             songsPlaylistFlow.zip(currentSongIndexFlow) { playlist, index -> playlist[index] }
 
-        override suspend fun getSongs(playFromSongId: String, fromPlaylistId: ID) =
-            getSongs(playFromSongId.toInt(), fromPlaylistId)
+        override suspend fun getSongs(playFromSongId: StringID, fromPlaylistId: StringID): List<SongDomain> =
+            musicRepository
+                .getAlbum(fromPlaylistId).songs
+                .let { songs ->
+                    songs
+                        .find { song -> song.id == playFromSongId }
+                        .let { song -> songs.indexOf(song) }
+                        .let { songIndex -> songs.subList(songIndex, songs.lastIndex) }
+                }
+                .also { songs -> _songsPlaylistFlow.emit(songs) }
 
-        override suspend fun getSongs(playFromSongId: ID, fromPlaylistId: ID): List<SongDomain> = musicRepository
-            .getPlaylist(playFromSongId)
-            .also { playlist -> _songsPlaylistFlow.emit(playlist) }
-            .also { playlist ->
-                playlist
-                    .find { song -> song.id == playFromSongId }
-                    .also { song -> _currentSongIndexFlow.emit(playlist.indexOf(song)) }
-            }
+        override suspend fun getSong(songId: StringID): SongDomain =
+            musicRepository.getSong(songId) ?: throw IllegalArgumentException()
 
-        override suspend fun getSong(songId: String): SongDomain = musicRepository.getSong(songId.toInt()) ?: throw IllegalArgumentException()
-
+        override suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain> =
+            songsPlaylistFlow.firstOrNull() ?: emptyList()
     }
 }

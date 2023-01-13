@@ -2,33 +2,18 @@ package xyz.savvamirzoyan.featuremusicplayerservice.ui
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
-import android.util.Log
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.featuremusicplayerservice.*
 import xyz.savvamirzoyan.featuremusicplayerservice.MusicPlayerService.Companion.MEDIA_ROOT_ID
-import xyz.savvamirzoyan.featuremusicplayerservice.MusicServiceConnection
-import xyz.savvamirzoyan.featuremusicplayerservice.SongDomainToSongServiceMapper
-import xyz.savvamirzoyan.featuremusicplayerservice.SongService
-import xyz.savvamirzoyan.featuremusicplayerservice.isPrepared
-import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Inject
 
 class MusicPlayerManager @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection,
-    private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager,
-    private val songDomainToSongServiceMapper: SongDomainToSongServiceMapper,
     private val scope: CoroutineScope,
 ) {
-
-    val mediaItemsFlow = musicPlayerManagerUseCase.songsPlaylistFlow
-        .map { list -> list.map { songDomainToSongServiceMapper.map(it) } }
-
-//    val isConnectedFlow: Flow<Boolean> = musicServiceConnection.isConnectedFlow
-//    val isNetworkErrorFlow: Flow<Boolean> = musicServiceConnection.networkErrorFlow
-//    private val currentlyPlayingSongFlow: Flow<MediaMetadataCompat> =
-//        musicServiceConnection.currentlyPlayingSongFlow.filterNotNull()
-//    private val playbackStateFlow: Flow<PlaybackStateCompat?> = musicServiceConnection.playbackStateFlow
 
     init {
         scope.launch {
@@ -61,29 +46,25 @@ class MusicPlayerManager @Inject constructor(
         musicServiceConnection.transportControls.seekTo(pos)
     }
 
-    fun playOrToggleSong(mediaItem: SongService, toggle: Boolean = false) {
+    fun playOrToggleSong(mediaItems: List<SongService>, toggle: Boolean = false) {
         scope.launch {
 
-            Log.d("SPAMEGGS", "playOrToggleSong started coroutine")
+            val mediaItem = mediaItems.first()
 
-            val playbackState = null //playbackStateFlow.firstOrNull()
-            val currentlyPlayingSong = null //currentlyPlayingSongFlow.firstOrNull()
+            val playbackState = musicServiceConnection.playbackStateFlow.firstOrNull()
+            val currentlyPlayingSong = musicServiceConnection.currentlyPlayingSongFlow.firstOrNull()
             val isPrepared = playbackState?.isPrepared ?: false
 
-            Log.d("SPAMEGGS", "before if statement")
-
-//            if (isPrepared && mediaItem.mediaId == currentlyPlayingSong?.getString(METADATA_KEY_MEDIA_ID)) {
-//                playbackState?.let { state ->
-//                    when {
-//                        state.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
-//                        state.isPlayEnabled -> musicServiceConnection.transportControls.play()
-//                        else -> {}
-//                    }
-//                }
-//            } else {
-//                Log.d("SPAMEGGS", "playFromMediaId(${mediaItem.mediaId})")
-            musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId, null)
-//            }
+            if (isPrepared && mediaItem.mediaId == currentlyPlayingSong?.getString(METADATA_KEY_MEDIA_ID)) {
+                playbackState?.let { state ->
+                    when {
+                        state.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
+                        state.isPlayEnabled -> musicServiceConnection.transportControls.play()
+                    }
+                }
+            } else {
+                musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId, null)
+            }
         }
     }
 

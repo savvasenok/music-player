@@ -10,9 +10,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,17 +18,12 @@ class MusicServiceConnection @Inject constructor(
     @ApplicationContext context: Context,
     private val scope: CoroutineScope
 ) {
-    private val _isConnectedFlow = MutableSharedFlow<Boolean>(replay = 0)
-    val isConnectedFlow: Flow<Boolean> = _isConnectedFlow
-
-    private val _networkErrorFlow = MutableSharedFlow<Boolean>(replay = 0)
-    val networkErrorFlow: Flow<Boolean> = _networkErrorFlow
 
     private val _playbackStateFlow = MutableStateFlow<PlaybackStateCompat?>(null)
     val playbackStateFlow: Flow<PlaybackStateCompat?> = _playbackStateFlow
 
     private val _currentlyPlayingSongFlow = MutableStateFlow<MediaMetadataCompat?>(null)
-    val currentlyPlayingSongFlow: Flow<MediaMetadataCompat> = _currentlyPlayingSongFlow.filterNotNull()
+    val currentlyPlayingSongFlow: Flow<MediaMetadataCompat?> = _currentlyPlayingSongFlow
 
     lateinit var mediaController: MediaControllerCompat
 
@@ -58,20 +51,12 @@ class MusicServiceConnection @Inject constructor(
         private val context: Context
     ) : MediaBrowserCompat.ConnectionCallback() {
 
+        override fun onConnectionSuspended() {}
+        override fun onConnectionFailed() {}
         override fun onConnected() {
             mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
                 registerCallback(MediaControllerCallback())
             }
-
-            _isConnectedFlow.tryEmit(true)
-        }
-
-        override fun onConnectionSuspended() {
-            _isConnectedFlow.tryEmit(false)
-        }
-
-        override fun onConnectionFailed() {
-            _isConnectedFlow.tryEmit(false)
         }
     }
 
@@ -95,7 +80,7 @@ class MusicServiceConnection @Inject constructor(
             super.onSessionEvent(event, extras)
 
             when (event) {
-                NETWORK_ERROR -> _networkErrorFlow.tryEmit(false)
+                NETWORK_ERROR -> {}
             }
         }
 

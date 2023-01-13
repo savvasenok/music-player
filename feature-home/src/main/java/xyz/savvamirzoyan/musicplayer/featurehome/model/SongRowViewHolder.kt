@@ -15,6 +15,6 @@ class SongRowViewHolder(
         binding.tvArtistName.text = item.artist.get(binding.root.context)
         binding.ivIsExplicit.isVisible = item.isExplicit
 
-        binding.root.setOnClickListener { item.onClickListener(item.id) }
+        binding.root.setOnClickListener { item.onClickListener(item.id, item.albumId) }
     }
 }

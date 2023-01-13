@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalSerializationApi::class)
+@file:Suppress("unused")
 
 package xyz.savvamirzoyan.musicplayer.music_repository
 
@@ -15,50 +16,54 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import xyz.savvamirzoyan.musicplayer.music_repository.api.DeezerApiService
+import xyz.savvamirzoyan.musicplayer.music_repository.mapper.AlbumDeezerDataToAlbumDomainMapper
 import xyz.savvamirzoyan.musicplayer.music_repository.mapper.SongDeezerDataToSongDomainMapper
-import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.MusicRepository
+import xyz.savvamirzoyan.musicplayer.usecase_core.MusicRepository
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-interface MusicRepositoryHiltModule {
+abstract class MusicRepositoryHiltModule {
 
     @Singleton
     @Binds
-    fun bindMusicRepository(impl: MusicRepositoryImpl): MusicRepository
+    abstract fun bindMusicRepository(impl: MusicRepositoryImpl): MusicRepository
 
     @Singleton
     @Binds
-    fun bindDeezerRepository(base: DeezerRepository.Base): DeezerRepository
+    abstract fun bindDeezerRepository(base: DeezerRepository.Base): DeezerRepository
 
     @Singleton
     @Binds
-    fun bindSongDeezerDataToSongDomainMapper(base: SongDeezerDataToSongDomainMapper.Base): SongDeezerDataToSongDomainMapper
-}
-
-@InstallIn(SingletonComponent::class)
-@Module
-object MusicRepositoryObjectHiltModule {
-
-    private val json = Json { ignoreUnknownKeys = true }
-    private val contentType = "application/json".toMediaType()
+    abstract fun bindSongDeezerDataToSongDomainMapper(base: SongDeezerDataToSongDomainMapper.Base): SongDeezerDataToSongDomainMapper
 
     @Singleton
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-        .build()
+    @Binds
+    abstract fun bindAlbumDeezerDataToAlbumDomainMapper(base: AlbumDeezerDataToAlbumDomainMapper.Base): AlbumDeezerDataToAlbumDomainMapper
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl(Constants.DEEZER_API)
-        .addConverterFactory(json.asConverterFactory(contentType))
-        .build()
+    companion object {
 
-    @Singleton
-    @Provides
-    fun bindDeezerApiService(retrofit: Retrofit): DeezerApiService =
-        retrofit.create(DeezerApiService::class.java)
+        private val json = Json { ignoreUnknownKeys = true }
+        private val contentType = "application/json".toMediaType()
+
+        @Singleton
+        @Provides
+        fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+            .build()
+
+        @Singleton
+        @Provides
+        fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(Constants.DEEZER_API)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+
+        @Singleton
+        @Provides
+        fun bindDeezerApiService(retrofit: Retrofit): DeezerApiService =
+            retrofit.create(DeezerApiService::class.java)
+
+    }
 }
