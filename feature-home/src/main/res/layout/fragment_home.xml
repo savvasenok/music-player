@@ -72,8 +72,8 @@
                     style="@style/Widget.Material3.Chip.Assist.Elevated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/cross"
-                    app:closeIcon="@drawable/bell"
+                    app:chipIcon="@drawable/ic_cross"
+                    app:closeIcon="@drawable/ic_bell"
                     app:iconEndPadding="-8dp"
                     app:textEndPadding="0dp" />
 
@@ -113,6 +113,7 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:columnCount="2"
+                android:layout_marginHorizontal="8dp"
                 android:rowCount="3"
                 android:useDefaultMargins="true">
 
@@ -165,6 +166,15 @@
                     android:layout_columnWeight="1" />
             </GridLayout>
 
+            <Button
+                android:visibility="gone"
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:text="PLAY MUSIC" />
+
             <LinearLayout
                 android:id="@+id/section_lastPlayedSongs"
                 android:layout_width="match_parent"
@@ -183,6 +193,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_lastPlayedSongs"
+                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:overScrollMode="never"

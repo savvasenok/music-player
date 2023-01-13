@@ -35,6 +35,7 @@ android {
 dependencies {
 
     implementation project(":core")
+    api project(":usecase-core")
 
     implementation HILT, ANDROIDX_CORE_KTX, COROUTINES_ANDROID
     kapt HILT_COMPILER

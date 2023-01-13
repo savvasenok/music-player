@@ -28,6 +28,9 @@ buildscript {
         testExtJunitVersion = "1.1.4"
         junitVersion = "4.13.2"
         espressoVersion = "3.5.0"
+        exoplayerVersion = "2.18.2"
+        kotlinxSerializationConverterVersion = "0.8.0"
+        kotlinxSerializationJsonVersion = "1.3.2"
 
         HILT = "com.google.dagger:hilt-android:$hiltVersion"
         HILT_COMPILER = "com.google.dagger:hilt-android-compiler:$hiltVersion"
@@ -44,12 +47,17 @@ buildscript {
         OKHTTP = "com.squareup.okhttp3:okhttp:$okHttpVersion"
         OKHTTP_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
         RETROFIT = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+        KOTLINX_SERIALIZATION_CONVERTER = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlinxSerializationConverterVersion"
+        KOTLINX_SERIALIZATION_JSON = "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationJsonVersion"
         GLIDE = "com.github.bumptech.glide:glide:$glideVersion"
         APPCOMPAT = "androidx.appcompat:appcompat:$appcompatVersion"
         MATERIAL_DESIGN = "com.google.android.material:material:$materialDesignVersion"
         JUNIT = "junit:junit:$junitVersion"
         TEST_EXT_JUNIT = "androidx.test.ext:junit:$testExtJunitVersion"
         ESPRESSO = "androidx.test.espresso:espresso-core:$espressoVersion"
+        EXOPLAYER_CORE = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
+        EXOPLAYER_UI = "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
+        EXOPLAYER_MEDIASESSION = "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 
         CORE_DEPS = [COROUTINES_ANDROID]
         CORE_FEATURE_DEPS = (

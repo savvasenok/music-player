@@ -1,5 +1,6 @@
 package xyz.savvamirzoyan.musicplayer.featurehome
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -7,8 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.featuremusicplayerservice.ui.MusicPlayerManager
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.core.ID
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlayedSongsStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.ToolbarChipsStateUi
@@ -22,7 +25,9 @@ internal class HomeViewModel @Inject constructor(
     private val currentPartOfDayToTextValueMapper: CurrentPartOfDayToTextValueMapper,
     private val playHistoryUseCase: PlayHistoryUseCase,
     private val lastPlayedPlaylistToLastPlaylistsStateMapper: LastPlayedPlaylistToLastPlaylistsStateMapper,
-    private val lastPlayedSongDomainToUiMapper: LastPlayedSongDomainToUiMapper
+    private val songDomainToUiMapper: SongDomainToUiMapper,
+    private val musicPlayerManager: MusicPlayerManager,
+    private val songDomainToSongMapper: SongDomainToSongMapper
 ) : CoreViewModel() {
 
     private val initToolbarChipsState = ToolbarChipsStateUi(
@@ -71,9 +76,23 @@ internal class HomeViewModel @Inject constructor(
     private fun setupLastPlayedSongs() {
         viewModelScope.launch {
             playHistoryUseCase.getLastPlayedSongs()
-                .map { lastPlayedSongDomainToUiMapper.map(it) }
+                .map { songDomainToUiMapper.map(it, ::playOrToggleSong) }
                 .let { LastPlayedSongsStateUi(it) }
                 .let { _lastPlayedSongsStateFlow.emit(it) }
+        }
+    }
+
+    private fun playOrToggleSong(songId: ID) {
+
+        Log.d("SPAMEGGS", "playOrToggleSong(songId:$songId)")
+        viewModelScope.launch {
+            playHistoryUseCase.getLastPlayedSongs()
+                .find { it.id == songId }
+                ?.let { songDomain -> songDomainToSongMapper.map(songDomain) }
+                ?.also {
+                    Log.d("SPAMEGGS", "song mapped:$it")
+                    musicPlayerManager.playOrToggleSong(it)
+                }
         }
     }
 }

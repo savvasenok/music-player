@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
-    tools:layout_marginHorizontal="16dp"
-    tools:layout_marginTop="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
 
     <ImageView
         android:id="@+id/iv_albumPicture"
@@ -47,7 +47,7 @@
                 android:layout_height="16dp"
                 android:layout_marginRight="4dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/explicit" />
+                android:src="@drawable/ic_explicit" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_artistName"

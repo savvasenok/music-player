@@ -37,8 +37,10 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core')
-    implementation MATERIAL_DESIGN, LIFECYCLE_RUNTIME, APPCOMPAT, HILT, ANDROIDX_CORE_KTX, GLIDE
+    implementation project(":core")
+
+    implementation MATERIAL_DESIGN, LIFECYCLE_RUNTIME, APPCOMPAT, HILT, ANDROIDX_CORE_KTX, GLIDE, LIFECYCLE_VIEWMODEL
+    api EXOPLAYER_CORE, EXOPLAYER_UI, EXOPLAYER_MEDIASESSION
     kapt HILT_COMPILER
     testImplementation JUNIT
     androidTestImplementation TEST_EXT_JUNIT

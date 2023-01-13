@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
     protected lateinit var binding: VB
+    protected val coreActivity: CoreActivity
+        get() = (requireActivity() as CoreActivity)
 
     private fun coroutine(lifecycle: Lifecycle.State, function: suspend CoroutineScope.() -> Unit) {
         lifecycleScope.launch { viewLifecycleOwner.repeatOnLifecycle(lifecycle, function) }

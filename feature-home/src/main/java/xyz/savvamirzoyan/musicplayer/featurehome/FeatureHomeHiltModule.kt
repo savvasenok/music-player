@@ -16,5 +16,8 @@ interface FeatureHomeHiltModule {
     fun bindLastPlayedPlaylistToLastPlaylistsStateMapper(base: LastPlayedPlaylistToLastPlaylistsStateMapper.Base): LastPlayedPlaylistToLastPlaylistsStateMapper
 
     @Binds
-    fun bindLastPlayedSongDomainToUiMapper(base: LastPlayedSongDomainToUiMapper.Base): LastPlayedSongDomainToUiMapper
+    fun bindLastPlayedSongDomainToUiMapper(base: SongDomainToUiMapper.Base): SongDomainToUiMapper
+
+    @Binds
+    fun bindSongDomainToSongMapper(base: SongDomainToSongMapper.Base): SongDomainToSongMapper
 }

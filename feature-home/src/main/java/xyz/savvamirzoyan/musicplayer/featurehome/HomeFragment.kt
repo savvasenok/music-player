@@ -5,24 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.savvamirzoyan.featuremusicplayerservice.ui.MusicPlayerManager
 import xyz.savvamirzoyan.musicplayer.appcore.CoreDiffUtilsGetter
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.CoreRecyclerViewAdapter
 import xyz.savvamirzoyan.musicplayer.appcore.load
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.featurehome.databinding.FragmentHomeBinding
-import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlayedSongFingerprint
+import xyz.savvamirzoyan.musicplayer.featurehome.model.SongFingerprint
 
 @AndroidEntryPoint
 class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
     private val adapter by lazy {
         CoreRecyclerViewAdapter(
-            fingerprints = listOf(LastPlayedSongFingerprint()),
+            fingerprints = listOf(SongFingerprint()),
             diffUtilCallbackGetter = object : CoreDiffUtilsGetter {
                 override fun get(old: List<Model.Ui>, new: List<Model.Ui>): DiffUtil.Callback =
                     object : DiffUtil.Callback() {
@@ -50,6 +52,9 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
     }
 
     private fun setupFlowListeners() {
+
+        binding.playlist1.root.setOnClickListener { }
+
         collect(viewModel.playlistsStateFlow) { state ->
 
             binding.playlist1.root.isVisible = state.isFirstVisible
@@ -118,6 +123,5 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
     private fun setupLastSongsRecyclerView() {
         binding.rvLastPlayedSongs.adapter = adapter
         binding.rvLastPlayedSongs.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvLastPlayedSongs.addItemDecoration(LastPlayedSongItemDecoration(resources.displayMetrics.density))
     }
 }

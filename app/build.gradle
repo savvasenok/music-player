@@ -40,7 +40,10 @@ android {
 
 dependencies {
 
+    implementation project(":appcore")
     implementation project(":feature-home")
+    implementation project(":feature-music-player-service")
+    implementation project(":data-music-repository")
 
     implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
     kapt HILT_COMPILER

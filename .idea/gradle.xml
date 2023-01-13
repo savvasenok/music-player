@@ -13,9 +13,14 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/appcore" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/data-music-repository" />
             <option value="$PROJECT_DIR$/feature-home" />
+            <option value="$PROJECT_DIR$/feature-music-player-service" />
+            <option value="$PROJECT_DIR$/feature-songs-list" />
+            <option value="$PROJECT_DIR$/usecase-core" />
             <option value="$PROJECT_DIR$/usecase-datetime" />
             <option value="$PROJECT_DIR$/usecase-play-history" />
+            <option value="$PROJECT_DIR$/usecase-player-manager" />
           </set>
         </option>
       </GradleProjectSettings>
