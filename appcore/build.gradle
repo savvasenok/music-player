@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation project(":core")
+    implementation project(":usecase-core")
 
     implementation MATERIAL_DESIGN, LIFECYCLE_RUNTIME, APPCOMPAT, HILT, ANDROIDX_CORE_KTX, GLIDE, LIFECYCLE_VIEWMODEL
     api EXOPLAYER_CORE, EXOPLAYER_UI, EXOPLAYER_MEDIASESSION

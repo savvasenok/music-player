@@ -1,9 +1,8 @@
-package xyz.savvamirzoyan.musicplayer.featurehome
+package xyz.savvamirzoyan.musicplayer.feature_songs_list
 
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.core.mapper.Mapper
-import xyz.savvamirzoyan.musicplayer.featurehome.model.SongUi
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -8,10 +8,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.featuremusicplayerservice.*
 import xyz.savvamirzoyan.featuremusicplayerservice.MusicPlayerService.Companion.MEDIA_ROOT_ID
+import xyz.savvamirzoyan.musicplayer.appcore.SongService
+import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 
 class MusicPlayerManager @Inject constructor(
     private val musicServiceConnection: MusicServiceConnection,
+    private val songDomainToSongServiceMapper: SongDomainToSongServiceMapper,
     private val scope: CoroutineScope,
 ) {
 
@@ -46,10 +49,11 @@ class MusicPlayerManager @Inject constructor(
         musicServiceConnection.transportControls.seekTo(pos)
     }
 
-    fun playOrToggleSong(mediaItems: List<SongService>, toggle: Boolean = false) {
+    fun playOrToggleSong(mediaItems: List<SongDomain>, toggle: Boolean = false) {
         scope.launch {
 
-            val mediaItem = mediaItems.first()
+            val mediaItemsService = mediaItems.map { songDomainToSongServiceMapper.map(it) }
+            val mediaItem = mediaItemsService.first()
 
             val playbackState = musicServiceConnection.playbackStateFlow.firstOrNull()
             val currentlyPlayingSong = musicServiceConnection.currentlyPlayingSongFlow.firstOrNull()

@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.featuremusicplayerservice
+package xyz.savvamirzoyan.musicplayer.appcore
 
 import xyz.savvamirzoyan.musicplayer.core.Model
 

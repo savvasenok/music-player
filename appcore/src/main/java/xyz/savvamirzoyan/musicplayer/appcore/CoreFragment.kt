@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
     protected lateinit var binding: VB
-    protected val coreActivity: CoreActivity
+    private val coreActivity: CoreActivity
         get() = (requireActivity() as CoreActivity)
 
     private fun coroutine(lifecycle: Lifecycle.State, function: suspend CoroutineScope.() -> Unit) {
@@ -25,5 +25,14 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
     protected fun <T> collect(flow: Flow<T>, function: suspend (T) -> Unit) {
         launchWhenCreated { flow.collect { function(it) } }
+    }
+
+    fun setupDefaultFlows(viewModel: CoreViewModel) {
+        collect(viewModel.loadingFlow) {
+            when (it) {
+                true -> coreActivity.startLoading()
+                false -> coreActivity.stopLoading()
+            }
+        }
     }
 }

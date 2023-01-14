@@ -1,9 +1,9 @@
-package xyz.savvamirzoyan.musicplayer.featurehome.model
+package xyz.savvamirzoyan.musicplayer.feature_songs_list
 
 import androidx.core.view.isVisible
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewHolder
 import xyz.savvamirzoyan.musicplayer.appcore.load
-import xyz.savvamirzoyan.musicplayer.featurehome.databinding.LayoutSongRowBinding
+import xyz.savvamirzoyan.musicplayer.feature_songs_list.databinding.LayoutSongRowBinding
 
 class SongRowViewHolder(
     binding: LayoutSongRowBinding

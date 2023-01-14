@@ -4,40 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
-import xyz.savvamirzoyan.featuremusicplayerservice.ui.MusicPlayerManager
-import xyz.savvamirzoyan.musicplayer.appcore.CoreDiffUtilsGetter
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
-import xyz.savvamirzoyan.musicplayer.appcore.CoreRecyclerViewAdapter
 import xyz.savvamirzoyan.musicplayer.appcore.load
-import xyz.savvamirzoyan.musicplayer.core.Model
+import xyz.savvamirzoyan.musicplayer.feature_songs_list.SongsListFragment
 import xyz.savvamirzoyan.musicplayer.featurehome.databinding.FragmentHomeBinding
-import xyz.savvamirzoyan.musicplayer.featurehome.model.SongFingerprint
 
 @AndroidEntryPoint
 class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
-    private val adapter by lazy {
-        CoreRecyclerViewAdapter(
-            fingerprints = listOf(SongFingerprint()),
-            diffUtilCallbackGetter = object : CoreDiffUtilsGetter {
-                override fun get(old: List<Model.Ui>, new: List<Model.Ui>): DiffUtil.Callback =
-                    object : DiffUtil.Callback() {
-                        override fun getOldListSize() = old.size
-                        override fun getNewListSize() = new.size
-                        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
-                        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
-                    }
-            }
-        )
-    }
-
     private val viewModel by viewModels<HomeViewModel>()
+    private var toolbarHeight: Float = 0f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -47,8 +30,30 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. Here the system is setting
+            // only the bottom, left, and right dimensions, but apply whichever insets are
+            // appropriate to your layout. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = insets.top
+            }
+
+            toolbarHeight = insets.top.toFloat()//v.height.toFloat()
+
+            // Return CONSUMED if you don't want want the window insets to keep being
+            // passed down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val alpha = 1 + (verticalOffset / toolbarHeight)
+            binding.toolbar.alpha = alpha
+        })
+
+        setupDefaultFlows(viewModel)
         setupFlowListeners()
-        setupLastSongsRecyclerView()
     }
 
     private fun setupFlowListeners() {
@@ -100,9 +105,11 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
                 binding.playlist6.indicatorMusicPlaying.isVisible = state.sixth?.isPlaying ?: false
             }
         }
+
         collect(viewModel.toolbarGreetingTextFlow) {
             binding.tvToolbarGreetings.text = it.get(requireContext())
         }
+
         collect(viewModel.toolbarChipsStateFlow) {
             binding.chipClear.isVisible = it.isCancelChipVisible
 
@@ -112,16 +119,18 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
             binding.chipPodcastsAndShows.isVisible = it.isPodcastsAndShowsChipVisible
             binding.chipPodcastsAndShows.isSelected = it.isPodcastsAndShowsChipSelected
         }
+
         collect(viewModel.lastPlayedSongsStateFlow) {
-            adapter.update(it.songs)
+
+            val fragment = SongsListFragment.newInstance(it)
+
+            childFragmentManager.beginTransaction()
+                .add(binding.fragmentSongsList.id, fragment)
+                .commit()
         }
+
         collect(viewModel.isLastSongsSectionVisible) {
             binding.sectionLastPlayedSongs.isVisible = it
         }
-    }
-
-    private fun setupLastSongsRecyclerView() {
-        binding.rvLastPlayedSongs.adapter = adapter
-        binding.rvLastPlayedSongs.layoutManager = LinearLayoutManager(requireContext())
     }
 }

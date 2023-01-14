@@ -1,5 +1,6 @@
 package xyz.savvamirzoyan.featuremusicplayerservice
 
+import xyz.savvamirzoyan.musicplayer.appcore.SongService
 import xyz.savvamirzoyan.musicplayer.core.mapper.Mapper
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject

@@ -8,17 +8,19 @@
     tools:context="xyz.savvamirzoyan.musicplayer.featurehome.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:elevation="10dp"
-        app:liftOnScroll="true">
+        app:layout_insetEdge="top">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            style="?attr/collapsingToolbarLayoutMediumStyle"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            android:fitsSystemWindows="false"
+            app:collapsedTitleGravity="top"
+            app:layout_scrollFlags="scroll|snapMargins|snap"
             app:titleCollapseMode="scale">
 
             <LinearLayout
@@ -49,6 +51,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <HorizontalScrollView
+            android:id="@+id/toolbar_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:overScrollMode="never"
@@ -101,6 +104,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/recyclerview_bottom_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -111,9 +116,8 @@
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:columnCount="2"
                 android:layout_marginHorizontal="8dp"
+                android:columnCount="2"
                 android:rowCount="3"
                 android:useDefaultMargins="true">
 
@@ -166,15 +170,6 @@
                     android:layout_columnWeight="1" />
             </GridLayout>
 
-            <Button
-                android:visibility="gone"
-                android:id="@+id/button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:text="PLAY MUSIC" />
-
             <LinearLayout
                 android:id="@+id/section_lastPlayedSongs"
                 android:layout_width="match_parent"
@@ -191,14 +186,11 @@
                     android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_lastPlayedSongs"
-                    android:layout_marginTop="8dp"
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/fragment_songs_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/layout_song_row" />
+                    tools:layout="@layout/fragment_songs_list" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

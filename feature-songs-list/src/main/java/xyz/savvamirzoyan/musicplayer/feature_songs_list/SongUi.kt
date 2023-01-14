@@ -1,13 +1,9 @@
-package xyz.savvamirzoyan.musicplayer.featurehome.model
+package xyz.savvamirzoyan.musicplayer.feature_songs_list
 
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.core.PictureUrl
 import xyz.savvamirzoyan.musicplayer.core.StringID
-
-class LastPlayedSongsStateUi(_songs: List<SongUi>) : Model.Ui {
-    val songs = _songs.take(5)
-}
 
 data class SongUi(
     val id: StringID,

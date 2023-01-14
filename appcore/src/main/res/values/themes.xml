@@ -2,8 +2,32 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.MusicPlayer" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:statusBarColor">?android:attr/colorBackground</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <!--        <item name="android:statusBarColor">?android:attr/colorBackground</item>-->
+        <!--        <item name="android:windowLightStatusBar">false</item>-->
+
+        <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <!--        &lt;!&ndash;        &lt;!&ndash; Optional: set to transparent if your app is drawing behind the status bar. &ndash;&gt;&ndash;&gt;-->
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+        <!--        &lt;!&ndash;        &lt;!&ndash; Optional: set the status bar light and content dark. &ndash;&gt;&ndash;&gt;-->
+        <!--        <item name="android:windowLightStatusBar">false</item>-->
+
+        <item name="android:windowTranslucentNavigation">true</item>
+
+        <item name="android:navigationBarColor">
+            @android:color/transparent
+        </item>
+
+        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
+        <item name="android:statusBarColor">
+            @android:color/transparent
+        </item>
+
+        <!-- Optional: set the status bar light and content dark. -->
+        <item name="android:windowLightStatusBar">
+            false
+        </item>
+
+
     </style>
 
     <style name="Theme.MusicPlayerOld" parent="Theme.AppCompat.NoActionBar">
