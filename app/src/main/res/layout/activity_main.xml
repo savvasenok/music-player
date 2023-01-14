@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="@id/fragment_mainNavHost"
         app:layout_constraintStart_toStartOf="@id/fragment_mainNavHost"
         app:layout_constraintTop_toTopOf="@id/fragment_mainNavHost"
-        app:minHideDelay="600"
+        app:minHideDelay="1000"
         tools:indeterminate="false"
         tools:progress="33"
         tools:visibility="visible" />

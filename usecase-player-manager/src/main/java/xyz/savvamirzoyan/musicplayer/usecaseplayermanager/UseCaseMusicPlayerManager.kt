@@ -41,7 +41,7 @@ interface UseCaseMusicPlayerManager {
                     songs
                         .find { song -> song.id == playFromSongId }
                         .let { song -> songs.indexOf(song) }
-                        .let { songIndex -> songs.subList(songIndex, songs.lastIndex) }
+                        .let { songIndex -> songs.subList(songIndex, songs.size) }
                 }
                 .also { songs -> _songsPlaylistFlow.emit(songs) }
 

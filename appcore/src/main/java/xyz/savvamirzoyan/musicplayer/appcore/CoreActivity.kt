@@ -1,9 +1,7 @@
 package xyz.savvamirzoyan.musicplayer.appcore
 
-import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 
@@ -19,27 +17,18 @@ abstract class CoreActivity : AppCompatActivity() {
             else loading(true)
         }
 
+    protected abstract fun loading(state: Boolean)
+
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            window.decorView.rootWindowInsets.displayCutout.logd("CUTOUT")
-        }
-    }
-
     fun startLoading() {
-        Log.d("SPAMEGGS", "startLoading() called")
-        loadersCounter++
+        loadersCounter += 1
     }
 
     fun stopLoading() {
-        Log.d("SPAMEGGS", "stopLoading() called")
-        loadersCounter--
+        loadersCounter -= 1
     }
-
-    protected abstract fun loading(state: Boolean)
 }

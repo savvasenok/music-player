@@ -2,10 +2,7 @@ package xyz.savvamirzoyan.musicplayer.featurehome
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
@@ -15,6 +12,8 @@ import xyz.savvamirzoyan.musicplayer.featurehome.model.ToolbarChipsStateUi
 import xyz.savvamirzoyan.musicplayer.usecasedatetime.DateTimeUseCase
 import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.PlayHistoryUseCase
 import javax.inject.Inject
+
+private const val LAST_PLAYED_SONGS_COUNT = 5
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
@@ -43,7 +42,10 @@ internal class HomeViewModel @Inject constructor(
 
     private val _lastPlayedSongsIdsFlow = MutableStateFlow<List<StringID>>(emptyList())
     val lastPlayedSongsStateFlow: Flow<List<StringID>> = _lastPlayedSongsIdsFlow
-    val isLastSongsSectionVisible: Flow<Boolean> = _lastPlayedSongsIdsFlow.map { it.isNotEmpty() }
+        .filter { it.isNotEmpty() }
+        .map { it.take(LAST_PLAYED_SONGS_COUNT) }
+    val isLastSongsSectionVisible: Flow<Boolean> = _lastPlayedSongsIdsFlow
+        .map { it.isNotEmpty() }
 
     init {
         setupGreetings()

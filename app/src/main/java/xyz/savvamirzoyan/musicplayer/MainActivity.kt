@@ -1,7 +1,6 @@
 package xyz.savvamirzoyan.musicplayer
 
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -17,7 +16,6 @@ class MainActivity : CoreActivity() {
     lateinit var musicPlayerManager: MusicPlayerManager
 
     private lateinit var progressBar: LinearProgressIndicator
-    private lateinit var fragmentHolder: ViewGroup
 
     private val navController by lazy { findNavController(R.id.fragment_mainNavHost) }
     private val bottomNavigationView by lazy { findViewById<BottomNavigationView>(R.id.bottomNavigationView) }
@@ -26,7 +24,6 @@ class MainActivity : CoreActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.pb_contentLoading)
-        fragmentHolder = findViewById(R.id.fragment_mainNavHost)
     }
 
     override fun onDestroy() {

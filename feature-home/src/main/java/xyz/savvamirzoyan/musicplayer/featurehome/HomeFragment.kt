@@ -4,12 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.load
@@ -20,7 +16,6 @@ import xyz.savvamirzoyan.musicplayer.featurehome.databinding.FragmentHomeBinding
 class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
     private val viewModel by viewModels<HomeViewModel>()
-    private var toolbarHeight: Float = 0f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -30,27 +25,7 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Apply the insets as a margin to the view. Here the system is setting
-            // only the bottom, left, and right dimensions, but apply whichever insets are
-            // appropriate to your layout. You can also update the view padding
-            // if that's more appropriate.
-            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = insets.top
-            }
-
-            toolbarHeight = insets.top.toFloat()//v.height.toFloat()
-
-            // Return CONSUMED if you don't want want the window insets to keep being
-            // passed down to descendant views.
-            WindowInsetsCompat.CONSUMED
-        }
-
-        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val alpha = 1 + (verticalOffset / toolbarHeight)
-            binding.toolbar.alpha = alpha
-        })
+        setupFragment(binding.appbar, binding.toolbar)
 
         setupDefaultFlows(viewModel)
         setupFlowListeners()
@@ -61,7 +36,6 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
         binding.playlist1.root.setOnClickListener { }
 
         collect(viewModel.playlistsStateFlow) { state ->
-
             binding.playlist1.root.isVisible = state.isFirstVisible
             binding.playlist2.root.isVisible = state.isSecondVisible
             binding.playlist3.root.isVisible = state.isThirdVisible
@@ -121,12 +95,8 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
         }
 
         collect(viewModel.lastPlayedSongsStateFlow) {
-
             val fragment = SongsListFragment.newInstance(it)
-
-            childFragmentManager.beginTransaction()
-                .add(binding.fragmentSongsList.id, fragment)
-                .commit()
+            childFragmentManager.beginTransaction().add(binding.fragmentSongsList.id, fragment).commit()
         }
 
         collect(viewModel.isLastSongsSectionVisible) {
