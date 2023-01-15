@@ -1,6 +1,5 @@
 package xyz.savvamirzoyan.musicplayer.music_repository.model.deezer
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import xyz.savvamirzoyan.musicplayer.core.ID

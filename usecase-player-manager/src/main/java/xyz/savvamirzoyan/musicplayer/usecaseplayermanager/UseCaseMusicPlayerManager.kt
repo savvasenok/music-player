@@ -3,6 +3,7 @@ package xyz.savvamirzoyan.musicplayer.usecaseplayermanager
 import kotlinx.coroutines.flow.*
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.usecase_core.MusicRepository
+import xyz.savvamirzoyan.musicplayer.usecase_core.model.AlbumDomain
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ interface UseCaseMusicPlayerManager {
 
     suspend fun getSong(songId: StringID): SongDomain
     suspend fun getSongs(playFromSongId: String, fromPlaylistId: StringID): List<SongDomain>
+    suspend fun getAlbum(albumId: StringID): AlbumDomain
     suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain>
 
     class Base @Inject constructor(
@@ -47,6 +49,9 @@ interface UseCaseMusicPlayerManager {
 
         override suspend fun getSong(songId: StringID): SongDomain =
             musicRepository.getSong(songId) ?: throw IllegalArgumentException()
+
+        override suspend fun getAlbum(albumId: StringID): AlbumDomain = musicRepository
+            .getAlbum(albumId)
 
         override suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain> =
             songsPlaylistFlow.firstOrNull() ?: emptyList()

@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/data-music-repository" />
             <option value="$PROJECT_DIR$/feature-home" />
             <option value="$PROJECT_DIR$/feature-music-player-service" />
+            <option value="$PROJECT_DIR$/feature-playlist" />
             <option value="$PROJECT_DIR$/feature-songs-list" />
             <option value="$PROJECT_DIR$/usecase-core" />
             <option value="$PROJECT_DIR$/usecase-datetime" />

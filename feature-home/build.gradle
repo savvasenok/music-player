@@ -44,6 +44,7 @@ dependencies {
     implementation project(":usecase-play-history")
     implementation project(":usecase-player-manager")
     implementation project(":feature-songs-list")
+    implementation project(":feature-playlist")
 
     implementation GLIDE, LIFECYCLE_VIEWMODEL, LIFECYCLE_RUNTIME, FRAGMENTS, ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
     kapt HILT_COMPILER

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="xyz.savvamirzoyan.musicplayer.featurehome.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="false"
-            app:collapsedTitleGravity="top"
             app:layout_scrollFlags="scroll|snapMargins|snap"
             app:titleCollapseMode="scale">
 
@@ -29,7 +27,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_toolbarGreetings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

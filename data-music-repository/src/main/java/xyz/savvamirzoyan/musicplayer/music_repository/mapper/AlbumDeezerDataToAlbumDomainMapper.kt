@@ -16,8 +16,11 @@ interface AlbumDeezerDataToAlbumDomainMapper : Mapper {
         override fun map(model: AlbumDeezerData) = AlbumDomain(
             id = model.id.toString(),
             title = model.title,
+            authorName = model.artist?.name ?: "NO DATA",
+            authorPictureUrl = model.artist?.pictureXl,
+            description = null,
             songs = model.tracks?.data?.map { songDeezerDomainToSongDomainMapper.map(it) } ?: emptyList(),
-            coverPictureUrl = model.coverXl
+            coverPictureUrl = model.coverXl,
         )
     }
 }

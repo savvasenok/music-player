@@ -17,8 +17,8 @@ interface SongDomainToUiMapper : Mapper {
         override fun map(model: SongDomain, callback: (songId: StringID, albumId: StringID) -> Unit) = SongUi(
             id = model.id,
             albumId = model.albumId,
-            title = TextValue.AsString(model.title),
-            artist = TextValue.AsString(model.artist),
+            title = TextValue(model.title),
+            artist = TextValue(model.artist),
             albumPictureUrl = model.albumPictureUrl,
             isExplicit = model.isExplicit,
             onClickListener = callback

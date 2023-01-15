@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.load
+import xyz.savvamirzoyan.musicplayer.appcore.setText
 import xyz.savvamirzoyan.musicplayer.feature_songs_list.SongsListFragment
 import xyz.savvamirzoyan.musicplayer.featurehome.databinding.FragmentHomeBinding
 
@@ -29,11 +30,36 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
         setupDefaultFlows(viewModel)
         setupFlowListeners()
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.playlist1.root.setOnClickListener {
+            viewModel.onPlaylistClick(0)
+        }
+
+        binding.playlist2.root.setOnClickListener {
+            viewModel.onPlaylistClick(1)
+        }
+
+        binding.playlist3.root.setOnClickListener {
+            viewModel.onPlaylistClick(2)
+        }
+
+        binding.playlist4.root.setOnClickListener {
+            viewModel.onPlaylistClick(3)
+        }
+
+        binding.playlist5.root.setOnClickListener {
+            viewModel.onPlaylistClick(4)
+        }
+
+        binding.playlist6.root.setOnClickListener {
+            viewModel.onPlaylistClick(5)
+        }
     }
 
     private fun setupFlowListeners() {
-
-        binding.playlist1.root.setOnClickListener { }
 
         collect(viewModel.playlistsStateFlow) { state ->
             binding.playlist1.root.isVisible = state.isFirstVisible
@@ -45,43 +71,43 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
             if (state.isFirstVisible) {
                 binding.playlist1.ivPicture.load(state.first?.pictureUrl)
-                binding.playlist1.tvTitle.text = state.first?.title?.get(requireContext())
+                state.first?.title?.let { binding.playlist1.tvTitle.setText(it) }
                 binding.playlist1.indicatorMusicPlaying.isVisible = state.first?.isPlaying ?: false
             }
 
             if (state.isSecondVisible) {
                 binding.playlist2.ivPicture.load(state.second?.pictureUrl)
-                binding.playlist2.tvTitle.text = state.second?.title?.get(requireContext())
+                state.second?.title?.let { binding.playlist2.tvTitle.setText(it) }
                 binding.playlist2.indicatorMusicPlaying.isVisible = state.second?.isPlaying ?: false
             }
 
             if (state.isThirdVisible) {
                 binding.playlist3.ivPicture.load(state.third?.pictureUrl)
-                binding.playlist3.tvTitle.text = state.third?.title?.get(requireContext())
+                state.third?.title?.let { binding.playlist3.tvTitle.setText(it) }
                 binding.playlist3.indicatorMusicPlaying.isVisible = state.third?.isPlaying ?: false
             }
 
             if (state.isFourthVisible) {
                 binding.playlist4.ivPicture.load(state.fourth?.pictureUrl)
-                binding.playlist4.tvTitle.text = state.fourth?.title?.get(requireContext())
+                state.fourth?.title?.let { binding.playlist4.tvTitle.setText(it) }
                 binding.playlist4.indicatorMusicPlaying.isVisible = state.fourth?.isPlaying ?: false
             }
 
             if (state.isFifthVisible) {
                 binding.playlist5.ivPicture.load(state.fifth?.pictureUrl)
-                binding.playlist5.tvTitle.text = state.fifth?.title?.get(requireContext())
+                state.fifth?.title?.let { binding.playlist5.tvTitle.setText(it) }
                 binding.playlist5.indicatorMusicPlaying.isVisible = state.fifth?.isPlaying ?: false
             }
 
             if (state.isSixthVisible) {
                 binding.playlist6.ivPicture.load(state.sixth?.pictureUrl)
-                binding.playlist6.tvTitle.text = state.sixth?.title?.get(requireContext())
+                state.sixth?.title?.let { binding.playlist6.tvTitle.setText(it) }
                 binding.playlist6.indicatorMusicPlaying.isVisible = state.sixth?.isPlaying ?: false
             }
         }
 
         collect(viewModel.toolbarGreetingTextFlow) {
-            binding.tvToolbarGreetings.text = it.get(requireContext())
+            binding.tvToolbarGreetings.setText(it)
         }
 
         collect(viewModel.toolbarChipsStateFlow) {

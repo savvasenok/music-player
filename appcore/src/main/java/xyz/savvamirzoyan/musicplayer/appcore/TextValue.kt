@@ -2,22 +2,28 @@ package xyz.savvamirzoyan.musicplayer.appcore
 
 import android.content.Context
 import androidx.annotation.StringRes
-import xyz.savvamirzoyan.musicplayer.core.Model
 
-sealed interface    TextValue : Model.Ui {
+class TextValue private constructor() {
 
-    fun get(context: Context): String
+    private var stringValue: String? = null
 
-    data class AsResource(
-        @StringRes val resourceId: Int,
-        val arguments: List<Any> = emptyList()
-    ) : TextValue {
-        override fun get(context: Context): String = context.getString(resourceId, *arguments.toTypedArray())
+    @StringRes
+    private var stringId: Int? = null
+    private var stringArgs: Array<Any> = emptyArray()
+
+    constructor(string: String) : this() {
+        stringValue = string
     }
 
-    data class AsString(
-        val value: String
-    ) : TextValue {
-        override fun get(context: Context) = value
+    constructor(@StringRes stringId: Int) : this() {
+        this.stringId = stringId
     }
+
+    constructor(@StringRes stringId: Int, args: Array<Any>) : this() {
+        this.stringId = stringId
+        this.stringArgs = args
+    }
+
+    fun getString(context: Context): String =
+        stringValue ?: stringId?.let { context.getString(it, *stringArgs) } ?: ""
 }

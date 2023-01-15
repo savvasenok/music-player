@@ -8,5 +8,8 @@ data class AlbumDomain(
     val id: StringID,
     val title: String,
     val coverPictureUrl: PictureUrl,
+    val authorName: String,
+    val authorPictureUrl: PictureUrl?,
+    val description: String?,
     val songs: List<SongDomain>
 ) : Model.Domain

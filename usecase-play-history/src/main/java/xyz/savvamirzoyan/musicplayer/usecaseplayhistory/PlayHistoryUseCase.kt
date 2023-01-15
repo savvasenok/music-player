@@ -21,7 +21,7 @@ interface PlayHistoryUseCase {
             musicRepository.getAlbum("1262261"),
         ).map {
             LastPlayedPlaylistDomain(
-                id = it.id.toInt(),
+                id = it.id,
                 title = it.title,
                 lastPlayedTimeUTC = 0,
                 pictureUrl = it.coverPictureUrl

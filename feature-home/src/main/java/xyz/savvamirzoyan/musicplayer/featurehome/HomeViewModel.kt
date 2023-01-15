@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
+import xyz.savvamirzoyan.musicplayer.appcore.DeepLinkBuilder
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
@@ -21,6 +22,7 @@ internal class HomeViewModel @Inject constructor(
     private val playHistoryUseCase: PlayHistoryUseCase,
     private val currentPartOfDayToTextValueMapper: CurrentPartOfDayToTextValueMapper,
     private val lastPlayedPlaylistToLastPlaylistsStateMapper: LastPlayedPlaylistToLastPlaylistsStateMapper,
+    private val deepLinkBuilder: DeepLinkBuilder
 ) : CoreViewModel() {
 
     private val initToolbarChipsState = ToolbarChipsStateUi(
@@ -76,6 +78,14 @@ internal class HomeViewModel @Inject constructor(
             playHistoryUseCase.getLastPlayedSongs()
                 .map { it.id }
                 .also { _lastPlayedSongsIdsFlow.emit(it) }
+        }
+    }
+
+    fun onPlaylistClick(playlistIndex: Int) {
+        viewModelScope.launch {
+            playHistoryUseCase.getLastPlayedPlaylists()[playlistIndex]
+                .let { playlist -> deepLinkBuilder.buildPlaylistDeepLink(playlist.id) }
+                .also { navigate(it) }
         }
     }
 }

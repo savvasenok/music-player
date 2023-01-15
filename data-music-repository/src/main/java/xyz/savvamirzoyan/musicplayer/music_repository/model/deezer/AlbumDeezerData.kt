@@ -7,13 +7,12 @@ import xyz.savvamirzoyan.musicplayer.core.ID
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.core.PictureUrl
 
-//cover, id, link, title, type, upc, tracks, tracklist, cover_big, cover_medium, cover_small, cover_xl, md5_image, release_date
-
 @Serializable
 data class AlbumDeezerData(
     val id: ID,
     val title: String,
     val cover: String,
+    val artist: ArtistDeezerData? = null,
     val link: String? = null,
     val type: String,
     val upc: String? = null,

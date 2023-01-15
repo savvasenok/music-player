@@ -12,9 +12,9 @@ interface CurrentPartOfDayToTextValueMapper : Mapper {
     class Base @Inject constructor() : CurrentPartOfDayToTextValueMapper {
 
         override fun map(model: CurrentPartOfDayDomain) = when (model) {
-            CurrentPartOfDayDomain.MORNING -> TextValue.AsResource(R.string.greetings_morning)
-            CurrentPartOfDayDomain.AFTERNOON -> TextValue.AsResource(R.string.greetings_afternoon)
-            CurrentPartOfDayDomain.EVENING -> TextValue.AsResource(R.string.greetings_evening)
+            CurrentPartOfDayDomain.MORNING -> TextValue(R.string.greetings_morning)
+            CurrentPartOfDayDomain.AFTERNOON -> TextValue(R.string.greetings_afternoon)
+            CurrentPartOfDayDomain.EVENING -> TextValue(R.string.greetings_evening)
         }
     }
 }

@@ -15,9 +15,9 @@ interface LastPlayedPlaylistToLastPlaylistsStateMapper {
         override fun map(models: List<LastPlayedPlaylistDomain>) = models
             .map {
                 LastPlaylistStateUi(
-                    title = TextValue.AsString(it.title),
+                    title = TextValue(it.title),
                     pictureUrl = it.pictureUrl,
-                    isPlaying = it.id == 0
+                    isPlaying = false
                 )
             }.let {
                 LastPlaylistsStateUi(
