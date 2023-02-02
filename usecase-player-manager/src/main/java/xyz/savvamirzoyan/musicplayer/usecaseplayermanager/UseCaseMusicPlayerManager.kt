@@ -1,59 +1,85 @@
 package xyz.savvamirzoyan.musicplayer.usecaseplayermanager
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.usecase_core.MusicRepository
-import xyz.savvamirzoyan.musicplayer.usecase_core.model.AlbumDomain
+import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongCompilationDomain
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
 import javax.inject.Inject
 
+// core "brain" module to handle all logic of music playing
 interface UseCaseMusicPlayerManager {
 
-    var currentSongsPlaylist: List<SongDomain>
+    val currentSongsCompilation: List<SongDomain>
 
-    val songsPlaylistFlow: Flow<List<SongDomain>>
-    val currentSongIndexFlow: Flow<Int>
-    val currentSongFlow: Flow<SongDomain>
+    val currentSongFlow: Flow<SongDomain?>
+    val currentUserSelectedSongFlow: Flow<SongDomain?>
+    val currentCompilationFlow: Flow<SongCompilationDomain?>
+
+    val isPlayingFlow: Flow<Boolean>
 
     suspend fun getSong(songId: StringID): SongDomain
-    suspend fun getSongs(playFromSongId: String, fromPlaylistId: StringID): List<SongDomain>
-    suspend fun getAlbum(albumId: StringID): AlbumDomain
-    suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain>
+    suspend fun getCompilation(compilationId: StringID): SongCompilationDomain
 
-    class Base @Inject constructor(
-        private val musicRepository: MusicRepository
-    ) : UseCaseMusicPlayerManager {
+    suspend fun pause()
+    suspend fun play()
+    suspend fun play(songId: StringID)
 
-        override var currentSongsPlaylist: List<SongDomain> = emptyList()
+    suspend fun updatePlayingCurrentSong(songId: StringID)
 
-        private val _songsPlaylistFlow = MutableSharedFlow<List<SongDomain>>(replay = 1)
-        override val songsPlaylistFlow: Flow<List<SongDomain>> = _songsPlaylistFlow
-            .onEach { currentSongsPlaylist = it }
+    class Base @Inject constructor(private val musicRepository: MusicRepository) : UseCaseMusicPlayerManager {
 
-        private val _currentSongIndexFlow = MutableSharedFlow<Int>(replay = 1)
-        override val currentSongIndexFlow: Flow<Int> = _currentSongIndexFlow
+        override var currentSongsCompilation: List<SongDomain> = mutableListOf()
+            private set
 
-        override val currentSongFlow: Flow<SongDomain> =
-            songsPlaylistFlow.zip(currentSongIndexFlow) { playlist, index -> playlist[index] }
+        private val _isPlayingFlow = MutableStateFlow(false)
+        override val isPlayingFlow: Flow<Boolean> = _isPlayingFlow
 
-        override suspend fun getSongs(playFromSongId: StringID, fromPlaylistId: StringID): List<SongDomain> =
-            musicRepository
-                .getAlbum(fromPlaylistId).songs
-                .let { songs ->
-                    songs
-                        .find { song -> song.id == playFromSongId }
-                        .let { song -> songs.indexOf(song) }
-                        .let { songIndex -> songs.subList(songIndex, songs.size) }
-                }
-                .also { songs -> _songsPlaylistFlow.emit(songs) }
+        private val _currentSongFlow = MutableStateFlow<SongDomain?>(null)
+        override val currentSongFlow: Flow<SongDomain?> = _currentSongFlow
+
+        private val _currentUserSelectedSongFlow = MutableSharedFlow<SongDomain>(replay = 0)
+        override val currentUserSelectedSongFlow: Flow<SongDomain?> = _currentUserSelectedSongFlow
+
+        private val _currentCompilationFlow = MutableStateFlow<SongCompilationDomain?>(null)
+        override val currentCompilationFlow: Flow<SongCompilationDomain?> = _currentCompilationFlow
 
         override suspend fun getSong(songId: StringID): SongDomain =
-            musicRepository.getSong(songId) ?: throw IllegalArgumentException()
+            musicRepository.getSong(songId)
+                ?: throw IllegalArgumentException("No song with this id ($songId)")
 
-        override suspend fun getAlbum(albumId: StringID): AlbumDomain = musicRepository
-            .getAlbum(albumId)
+        override suspend fun getCompilation(compilationId: StringID): SongCompilationDomain =
+            musicRepository.getSongCompilation(compilationId)
+                ?: throw IllegalArgumentException("No song compilation with this id ($compilationId)")
 
-        override suspend fun getCurrentPlaylistFromMediaId(mediaId: String): List<SongDomain> =
-            songsPlaylistFlow.firstOrNull() ?: emptyList()
+        override suspend fun pause() {
+            _isPlayingFlow.emit(false)
+        }
+
+        override suspend fun play() {
+            _isPlayingFlow.emit(true)
+        }
+
+        override suspend fun play(songId: StringID) {
+
+            val song = musicRepository.getSong(songId)
+            val compilation = song?.let { musicRepository.getSongCompilation(song.compilationId) }
+
+            currentSongsCompilation = compilation?.songs ?: emptyList()
+
+            _currentSongFlow.emit(song)
+            if (song != null) _currentUserSelectedSongFlow.emit(song)
+            _currentCompilationFlow.emit(compilation)
+
+            play()
+        }
+
+        // called from MusicServiceConnection. Updated, when song finishes and new one starts
+        override suspend fun updatePlayingCurrentSong(songId: StringID) {
+            currentSongsCompilation.find { it.id == songId }
+                ?.also { song -> _currentSongFlow.emit(song) }
+        }
     }
 }

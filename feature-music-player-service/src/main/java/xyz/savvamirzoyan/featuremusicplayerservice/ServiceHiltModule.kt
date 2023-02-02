@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "DEPRECATION")
 
 package xyz.savvamirzoyan.featuremusicplayerservice
 
@@ -8,7 +8,6 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +18,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Singleton
 
 @InstallIn(ServiceComponent::class)
@@ -44,6 +44,7 @@ abstract class ServiceHiltModule {
             setHandleAudioBecomingNoisy(true)
         }
 
+        @Suppress("DEPRECATION")
         @ServiceScoped
         @Provides
         fun provideDataSourceFactory(
@@ -57,18 +58,15 @@ abstract class ServiceHiltModule {
 @Module
 abstract class ApplicationHiltModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindSongDomainToSongServiceMapper(base: SongDomainToSongServiceMapper.Base): SongDomainToSongServiceMapper
-
     companion object {
 
         @Singleton
         @Provides
         fun provideMusicServiceConnection(
             @ApplicationContext context: Context,
+            musicPlayerManager: UseCaseMusicPlayerManager,
             scope: CoroutineScope
-        ) = MusicServiceConnection(context, scope)
+        ) = MusicServiceConnection(context, musicPlayerManager, scope)
 
         @Singleton
         @Provides

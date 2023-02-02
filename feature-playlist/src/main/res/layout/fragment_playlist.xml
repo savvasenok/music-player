@@ -28,7 +28,6 @@
                 android:orientation="vertical">
 
                 <ImageView
-
                     android:id="@+id/iv_albumPicture"
                     android:layout_width="264dp"
                     android:layout_height="264dp"
@@ -100,7 +99,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_likesAndDuration"
+                    android:id="@+id/tv_briefInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -128,22 +127,40 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_like"
                 style="@style/Widget.Material3.Button.IconButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checkable="true"
+                app:icon="@drawable/selector_heart"
+                app:iconTint="?colorPrimary" />
 
-                app:icon="@drawable/ic_heart" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_download"
-                style="@style/Widget.Material3.Button.IconButton"
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_download" />
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/pb_download"
+                    style="@style/Widget.Material3.CircularProgressIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:hideAnimationBehavior="outward"
+                    app:showAnimationBehavior="inward"
+                    app:trackCornerRadius="4dp"
+                    app:trackThickness="2dp"
+                    tools:progress="33" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_download"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_download" />
+            </FrameLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_more"
@@ -163,14 +180,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                app:icon="@drawable/ic_shuffle" />
+                android:checkable="true"
+                app:icon="@drawable/ic_shuffle"
+                app:iconTint="?colorPrimary" />
 
-            <com.google.android.material.button.MaterialButton
+            <xyz.savvamirzoyan.musicplayer.appcore.widget.PlayerFAB
                 android:id="@+id/button_play"
-                style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                style="@style/Widget.Material3.FloatingActionButton.Secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_player_play" />
+                android:src="@drawable/selector_player"
+                app:elevation="0dp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

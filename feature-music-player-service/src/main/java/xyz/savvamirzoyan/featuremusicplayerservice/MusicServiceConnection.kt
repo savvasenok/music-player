@@ -9,21 +9,30 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Inject
 
+// wrapper class that tells about player states
 class MusicServiceConnection @Inject constructor(
     @ApplicationContext context: Context,
+    private val musicPlayerManager: UseCaseMusicPlayerManager,
     private val scope: CoroutineScope
 ) {
 
     private val _playbackStateFlow = MutableStateFlow<PlaybackStateCompat?>(null)
-    val playbackStateFlow: Flow<PlaybackStateCompat?> = _playbackStateFlow
+//    val playbackStateFlow: Flow<PlaybackStateCompat?> = _playbackStateFlow
+//    val isPlayingNowFlow: Flow<Boolean> = playbackStateFlow
+//        .map { it?.isPlaying == true }
+//        .distinctUntilChanged { old, new -> old == new }
+//        .onEach { if (it) musicPlayerManager.play() else musicPlayerManager.pause() }
 
-    private val _currentlyPlayingSongFlow = MutableStateFlow<MediaMetadataCompat?>(null)
-    val currentlyPlayingSongFlow: Flow<MediaMetadataCompat?> = _currentlyPlayingSongFlow
+//    private val _currentlyPlayingSongFlow = MutableStateFlow<MediaMetadataCompat?>(null)
+//    val currentlyPlayingSongIdFlow: Flow<String?> = _currentlyPlayingSongFlow
+//        .distinctUntilChanged { old, new -> old?.description?.mediaId == new?.description?.mediaId }
+//        .map { it?.description?.mediaId }
+//        .onEach { mediaId -> mediaId?.let { musicPlayerManager.updatePlayingCurrentSong(mediaId) } }
 
     lateinit var mediaController: MediaControllerCompat
 
@@ -63,16 +72,14 @@ class MusicServiceConnection @Inject constructor(
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
-            scope.launch {
-                _playbackStateFlow.emit(state)
-            }
+            scope.launch { _playbackStateFlow.emit(state) }
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
-
             scope.launch {
-                _currentlyPlayingSongFlow.emit(metadata)
+                metadata?.description?.mediaId?.let { musicPlayerManager.updatePlayingCurrentSong(it) }
+//                _currentlyPlayingSongFlow.emit(metadata)
             }
         }
 

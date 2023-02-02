@@ -16,5 +16,6 @@ class SongDomainToMediaMetadataMapper : Mapper {
         .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, model.songUrl)
         .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, model.artist)
         .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, model.artist)
+        .putString(MediaMetadataCompat.METADATA_KEY_COMPILATION, model.compilationId)
         .build()
 }

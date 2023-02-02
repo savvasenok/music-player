@@ -12,25 +12,40 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.musicplayer.appcore.CoreDiffUtilsGetter
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.CoreRecyclerViewAdapter
-import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.feature_songs_list.databinding.FragmentSongsListBinding
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SongsListFragment : CoreFragment<FragmentSongsListBinding>() {
 
-    private val viewModel by viewModels<SongsListViewModel>()
-
+    @Inject
+    lateinit var viewModelFactory: SongsListViewModel.Factory
+    private val viewModel by viewModels<SongsListViewModel>(factoryProducer = {
+        SongsListViewModel.provideFactory(
+            viewModelFactory,
+            arguments?.getStringArrayList(KEY_SONGS_LIST) ?: listOf()
+        )
+    })
     private val adapter by lazy {
         CoreRecyclerViewAdapter(
             fingerprints = listOf(SongFingerprint()),
-            diffUtilCallbackGetter = object : CoreDiffUtilsGetter {
-                override fun get(old: List<Model.Ui>, new: List<Model.Ui>): DiffUtil.Callback =
+            diffUtilCallbackGetter = object : CoreDiffUtilsGetter<SongUi> {
+                override fun get(old: List<SongUi>, new: List<SongUi>): DiffUtil.Callback =
                     object : DiffUtil.Callback() {
                         override fun getOldListSize() = old.size
                         override fun getNewListSize() = new.size
-                        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
-                        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = false
+                        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                            old[oldItemPosition].id == new[newItemPosition].id
+
+                        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                            (old[oldItemPosition] == new[newItemPosition])
+
+                        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+                            if (old[oldItemPosition].isPlaying != new[newItemPosition].isPlaying)
+                                return SongPlayingStatusPayload(new[newItemPosition].isPlaying)
+                            return null
+                        }
                     }
             }
         )
@@ -44,18 +59,13 @@ class SongsListFragment : CoreFragment<FragmentSongsListBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val songsIds = arguments?.getStringArrayList(KEY_SONGS_LIST) ?: listOf<StringID>()
-        viewModel.requestSongs(songsIds)
-
         setupDefaultFlows(viewModel)
         setupLastSongsRecyclerView()
         setupFlowListeners()
     }
 
     private fun setupFlowListeners() {
-        collect(viewModel.songsListFlow) {
-            adapter.update(it)
-        }
+        collect(viewModel.songsListFlow) { adapter.update(it) }
     }
 
     private fun setupLastSongsRecyclerView() {

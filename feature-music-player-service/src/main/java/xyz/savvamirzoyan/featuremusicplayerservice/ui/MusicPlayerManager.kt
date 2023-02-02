@@ -2,20 +2,20 @@ package xyz.savvamirzoyan.featuremusicplayerservice.ui
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
-import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import xyz.savvamirzoyan.featuremusicplayerservice.*
 import xyz.savvamirzoyan.featuremusicplayerservice.MusicPlayerService.Companion.MEDIA_ROOT_ID
+import xyz.savvamirzoyan.featuremusicplayerservice.MusicServiceConnection
 import xyz.savvamirzoyan.musicplayer.appcore.SongService
-import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongDomain
+import xyz.savvamirzoyan.musicplayer.core.StringID
+import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Inject
 
+// class to manage player from local UI (buttons, seekbars etc)
 class MusicPlayerManager @Inject constructor(
+    private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager,
     private val musicServiceConnection: MusicServiceConnection,
-    private val songDomainToSongServiceMapper: SongDomainToSongServiceMapper,
-    private val scope: CoroutineScope,
+    scope: CoroutineScope
 ) {
 
     init {
@@ -35,41 +35,62 @@ class MusicPlayerManager @Inject constructor(
                 }
             })
         }
+
+        scope.launch {
+
+            musicPlayerManagerUseCase.currentUserSelectedSongFlow.collect {
+                it?.also { playSong(it.id) }
+            }
+        }
     }
 
+    @Suppress("unused")
     fun skipToNextSong() {
         musicServiceConnection.transportControls.skipToNext()
     }
 
+    @Suppress("unused")
     fun skipToPreviousSong() {
         musicServiceConnection.transportControls.skipToPrevious()
     }
 
+    @Suppress("unused")
     fun seekTo(pos: Long) {
         musicServiceConnection.transportControls.seekTo(pos)
     }
 
-    fun playOrToggleSong(mediaItems: List<SongDomain>, toggle: Boolean = false) {
-        scope.launch {
-
-            val mediaItemsService = mediaItems.map { songDomainToSongServiceMapper.map(it) }
-            val mediaItem = mediaItemsService.first()
-
-            val playbackState = musicServiceConnection.playbackStateFlow.firstOrNull()
-            val currentlyPlayingSong = musicServiceConnection.currentlyPlayingSongFlow.firstOrNull()
-            val isPrepared = playbackState?.isPrepared ?: false
-
-            if (isPrepared && mediaItem.mediaId == currentlyPlayingSong?.getString(METADATA_KEY_MEDIA_ID)) {
-                playbackState?.let { state ->
-                    when {
-                        state.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
-                        state.isPlayEnabled -> musicServiceConnection.transportControls.play()
-                    }
-                }
-            } else {
-                musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId, null)
-            }
-        }
+    //    fun playOrToggleSongs(songs: List<SongDomain>, toggle: Boolean = false) {
+//        scope.launch {
+//
+//            val songsService = songs.map { songDomainToSongServiceMapper.map(it) }
+//            val songService = songsService.first()
+//
+//            val playbackState = musicServiceConnection.playbackStateFlow.firstOrNull()
+//            val currentlyPlayingSong = musicPlayerManagerUseCase.currentUserSelectedSongFlow.firstOrNull()
+//            val isPrepared = playbackState?.isPrepared ?: false
+//
+//             // If player is already has some music to play (paused or playing)
+//            if (isPrepared) {
+//
+//            } else {
+//
+//            }
+//
+//            if (isPrepared && songService.mediaId == currentlyPlayingSong?.id) {
+//                playbackState?.let { state ->
+//                    when {
+//                        state.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
+//                        state.isPlayEnabled -> musicServiceConnection.transportControls.play()
+//                    }
+//                }
+//            } else {
+//                musicServiceConnection.transportControls.playFromMediaId(songService.mediaId, null)
+//            }
+//        }
+//    }
+//
+    private fun playSong(songID: StringID) {
+        musicServiceConnection.transportControls.playFromMediaId(songID, null)
     }
 
     fun onClear() {

@@ -6,19 +6,19 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
+import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongCompilationDomain
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
+import kotlin.random.Random
 
 class PlaylistViewModel @AssistedInject constructor(
     @Assisted private val albumId: StringID,
-    private val musicPlayerManager: UseCaseMusicPlayerManager
+    private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager
 ) : CoreViewModel() {
 
     private val _playlistInfoFlow = MutableStateFlow<PlaylistInfoUi?>(null)
@@ -27,19 +27,56 @@ class PlaylistViewModel @AssistedInject constructor(
     private val _albumSongsFlow = MutableStateFlow<List<StringID>>(emptyList())
     val albumSongsFlow: Flow<List<StringID>> = _albumSongsFlow.filter { it.isNotEmpty() }
 
+    private val _downloadAlbumProgress = MutableStateFlow(0)
+    val downloadAlbumProgress: Flow<Int> = _downloadAlbumProgress
+    val isDownloadAlbumProgressVisibleFlow: Flow<Boolean> = downloadAlbumProgress
+        .map {
+            if (it in 1 until 100) {
+                true
+            } else if (it >= 100) {
+                delay(600)
+                false
+            } else false
+        }
+
+    private val _isAlbumLikedFlow = MutableStateFlow(false)
+    val isAlbumLikedFlow: Flow<Boolean> = _isAlbumLikedFlow
+
+    private val _isInShuffleMode = MutableStateFlow(false)
+    val isInShuffleModeFlow: Flow<Boolean> = _isInShuffleMode
+
+    val isPlaylistPlaying: Flow<Boolean> = combine(
+        musicPlayerManagerUseCase.currentSongFlow,
+        musicPlayerManagerUseCase.currentCompilationFlow,
+        musicPlayerManagerUseCase.isPlayingFlow
+    ) { currentSong, currentCompilation, isPlaying ->
+        currentSong?.compilationId == currentCompilation?.id && isPlaying
+    }.distinctUntilChanged { old, new -> old == new }
+
     init {
         viewModelScope.launch {
             whileLoading {
-                musicPlayerManager.getAlbum(albumId)
-                    .also { albumDomain ->
-                        PlaylistInfoUi(
-                            coverUrl = albumDomain.coverPictureUrl,
-                            albumTitle = TextValue(albumDomain.title),
-                            albumDescription = TextValue(albumDomain.description ?: ""),
-                            authorName = TextValue(albumDomain.authorName),
-                            authorPictureUrl = albumDomain.authorPictureUrl ?: "",
-                            likesAndDuration = TextValue("137623 likes • 42m")
-                        ).also { _playlistInfoFlow.emit(it) }
+                musicPlayerManagerUseCase.getCompilation(albumId)
+                    .also { compilation ->
+                        when (compilation) {
+                            is SongCompilationDomain.AlbumDomain -> PlaylistInfoUi(
+                                coverUrl = compilation.coverPictureUrl,
+                                albumTitle = TextValue(compilation.title),
+                                albumDescription = TextValue(compilation.description ?: ""),
+                                authorName = TextValue(compilation.authorName),
+                                authorPictureUrl = compilation.authorPictureUrl ?: "",
+                                briefInformation = TextValue(
+                                    TextValue(R.plurals.fans_amount, compilation.fans, compilation.fans),
+                                    TextValue(R.string.album_brief_info_separator),
+                                    TextValue(
+                                        R.plurals.tracks_amount,
+                                        compilation.songs.count(),
+                                        compilation.songs.count()
+                                    )
+                                )
+                            ).also { _playlistInfoFlow.emit(it) }
+                            is SongCompilationDomain.PlaylistDomain -> {}
+                        }
                     }
                     .also { albumDomain ->
                         albumDomain.songs
@@ -47,6 +84,49 @@ class PlaylistViewModel @AssistedInject constructor(
                             .also { _albumSongsFlow.emit(it) }
                     }
             }
+        }
+    }
+
+    fun onLikeClick() {
+        viewModelScope.launch {
+//            _isAlbumLikedFlow.emit(!_isAlbumLikedFlow.first())
+        }
+    }
+
+    fun onDownloadAlbumClick() {
+        viewModelScope.launch {
+            var progress = 0
+
+            while (progress <= 100) {
+                val wait = Random.nextInt(5, 10) * 100L
+                val pb = Random.nextInt(10, 20)
+                progress += pb
+                _downloadAlbumProgress.emit(progress)
+                delay(wait)
+            }
+        }
+    }
+
+    fun onPlayButtonClick() {
+        viewModelScope.launch {
+
+//            val isPlaying = musicServiceConnection.isPlayingNowFlow.first()
+
+//            Log.d("SPAMEGGS", "isPlaying:$isPlaying")
+//
+//            viewModelScope.launch {
+//                musicPlayerManagerUseCase.getSongs(songId, albumId)
+//                    .also { songs -> musicPlayerManager.playOrToggleSongs(songs) }
+//            }
+
+//            musicPlayerManagerUseCase.getCompilation(albumId)
+//                ?.let { albumDomain -> musicPlayerManagerUseCase.getSongs(albumDomain.songs.first().id, albumId) }
+//                ?.also { songs -> musicPlayerManager.playOrToggleSongs(songs.songs) }
+
+//            musicPlayerManagerUseCase.getAlbum(albumId)?.songs
+//                ?.also {
+//                    musicPlayerManager.playOrToggleSongs(it, toggle = isPlaying)
+//                }
         }
     }
 

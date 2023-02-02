@@ -18,7 +18,8 @@ interface SongDeezerDataToSongDomainMapper : Mapper {
             albumPictureUrl = model.album.coverMedium,
             isExplicit = model.explicitLyrics,
             songUrl = model.preview,
-            albumId = model.album.id.toString()
+            albumId = model.album.id.toString(),
+            compilationId = model.album.id.toString() // TODO: now its just album, but also can be a playlist
         )
     }
 }

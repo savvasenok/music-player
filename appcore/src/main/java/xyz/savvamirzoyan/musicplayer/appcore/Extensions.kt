@@ -1,5 +1,7 @@
 package xyz.savvamirzoyan.musicplayer.appcore
 
+import android.animation.Animator
+import android.view.View
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -23,4 +25,33 @@ fun MaterialTextView.setText(textValue: TextValue) {
 
 fun CollapsingToolbarLayout.setTitle(textValue: TextValue) {
     title = textValue.getString(this.context)
+}
+
+fun View.hideWithAnimation() {
+    this.isVisible = true
+    this.alpha = 1f
+
+    this.animate()
+        .alpha(0f)
+        .setDuration(context.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong())
+        .setListener(object : Animator.AnimatorListener {
+            override fun onAnimationEnd(p0: Animator) {
+                this@hideWithAnimation.isVisible = false
+            }
+
+            override fun onAnimationStart(p0: Animator) {}
+            override fun onAnimationCancel(p0: Animator) {}
+            override fun onAnimationRepeat(p0: Animator) {}
+        })
+        .start()
+}
+
+fun View.showWithAnimation() {
+    this.alpha = 0f
+    this.isVisible = true
+    this.animate()
+        .alpha(1f)
+        .setDuration(context.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong())
+        .setListener(null)
+        .start()
 }

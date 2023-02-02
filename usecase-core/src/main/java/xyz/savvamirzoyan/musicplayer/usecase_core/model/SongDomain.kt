@@ -12,5 +12,6 @@ data class SongDomain(
     val albumPictureUrl: PictureUrl,
     val songUrl: SongUrl,
     val isExplicit: Boolean,
-    val albumId: StringID
+    val albumId: StringID,
+    val compilationId: StringID // its either the same as albumId or another identification for playlist
 ) : Model.Domain

@@ -7,5 +7,5 @@ data class SongService(
     val artist: String,
     val title: String,
     val albumUrl: String,
-    val songUrl: String
+    val songUrl: String,
 ) : Model.Ui

@@ -16,7 +16,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -27,6 +26,7 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
     private val coreActivity: CoreActivity
         get() = (requireActivity() as CoreActivity)
 
+    @Suppress("SameParameterValue")
     private fun coroutine(lifecycle: Lifecycle.State, function: suspend CoroutineScope.() -> Unit) {
         lifecycleScope.launch { viewLifecycleOwner.repeatOnLifecycle(lifecycle, function) }
     }
@@ -35,11 +35,10 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
         coroutine(Lifecycle.State.CREATED, function)
     }
 
-    protected fun <T> collect(flow: Flow<T>, isSingleCollect: Boolean = false, function: suspend (T) -> Unit) {
+    protected fun <T> collect(flow: Flow<T>, function: suspend CoroutineScope.(T) -> Unit) {
         launchWhenCreated {
             flow.collect {
                 function(it)
-                if (isSingleCollect) cancel()
             }
         }
     }

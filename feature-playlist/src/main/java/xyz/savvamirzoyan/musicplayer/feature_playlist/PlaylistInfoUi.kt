@@ -10,5 +10,5 @@ data class PlaylistInfoUi(
     val albumDescription: TextValue,
     val authorPictureUrl: PictureUrl,
     val authorName: TextValue,
-    val likesAndDuration: TextValue
+    val briefInformation: TextValue
 ) : Model.Ui

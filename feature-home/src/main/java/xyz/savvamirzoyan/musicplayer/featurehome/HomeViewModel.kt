@@ -42,7 +42,7 @@ internal class HomeViewModel @Inject constructor(
     private val _playlistsStateFlow = MutableStateFlow(LastPlaylistsStateUi())
     internal val playlistsStateFlow: Flow<LastPlaylistsStateUi> = _playlistsStateFlow
 
-    private val _lastPlayedSongsIdsFlow = MutableStateFlow<List<StringID>>(emptyList())
+    private val _lastPlayedSongsIdsFlow = MutableSharedFlow<List<StringID>>(replay = 0)
     val lastPlayedSongsStateFlow: Flow<List<StringID>> = _lastPlayedSongsIdsFlow
         .filter { it.isNotEmpty() }
         .map { it.take(LAST_PLAYED_SONGS_COUNT) }

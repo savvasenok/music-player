@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package xyz.savvamirzoyan.featuremusicplayerservice
 
 import android.app.PendingIntent
@@ -25,6 +27,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MusicPlayerService : MediaBrowserServiceCompat() {
 
+    @Suppress("DEPRECATION")
     @Inject
     lateinit var dataSourceFactory: DefaultDataSourceFactory
 
@@ -76,7 +79,7 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
             musicPlayerManager,
             serviceScope,
             songDomainToMediaMetadataMapper
-        ) { preparePlayer(it, true) }
+        ) { songs, songIndex -> preparePlayer(songs, songIndex) }
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlaybackPreparer(musicPlaybackPreparer)
@@ -90,12 +93,12 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
 
     private fun preparePlayer(
         songs: List<MediaMetadataCompat>,
-        playNow: Boolean = true
+        songIndex: Int,
     ) {
         exoPlayer.setMediaSource(musicSource.asMediaSource(songs, dataSourceFactory))
         exoPlayer.prepare()
-        exoPlayer.seekTo(0, 0L)
-        exoPlayer.playWhenReady = playNow
+        exoPlayer.seekTo(songIndex, 0L)
+        exoPlayer.playWhenReady = true
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -121,8 +124,7 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
 
     private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
         override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-            return musicPlayerManager
-                .currentSongsPlaylist[windowIndex]
+            return musicPlayerManager.currentSongsCompilation[windowIndex]
                 .let { songDomainToMediaMetadataMapper.map(it) }
                 .let { musicSource.asMediaItems(listOf(it)) }
                 .first()

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="fans_amount">
+        <item quantity="zero">%d fans</item>
+        <item quantity="one">%d fan</item>
+        <item quantity="other">%d fans</item>
+    </plurals>
+    <plurals name="tracks_amount">
+        <item quantity="zero">%d tracks</item>
+        <item quantity="one">%d track</item>
+        <item quantity="other">%d tracks</item>
+    </plurals>
+    <string name="album_brief_info_separator" translatable="false">\ •\ </string>
+</resources>

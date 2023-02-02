@@ -17,6 +17,7 @@ data class AlbumDeezerData(
     val type: String,
     val upc: String? = null,
     val tracks: HelperDeezerData<SongDeezerData>? = null,
+    val fans: Int? = null,
     @SerialName("tracklist") val trackList: String,
     @SerialName("cover_big") val coverBig: PictureUrl,
     @SerialName("cover_medium") val coverMedium: PictureUrl,

@@ -9,19 +9,30 @@ import javax.inject.Singleton
 
 interface SongDomainToUiMapper : Mapper {
 
-    fun map(model: SongDomain, callback: (songId: StringID, albumId: StringID) -> Unit): SongUi
+    fun map(
+        model: SongDomain,
+        currentSongPlayingId: StringID?,
+        isPlaying: Boolean,
+        callback: (songId: StringID) -> Unit
+    ): SongUi
 
     @Singleton
     class Base @Inject constructor() : SongDomainToUiMapper {
 
-        override fun map(model: SongDomain, callback: (songId: StringID, albumId: StringID) -> Unit) = SongUi(
+        override fun map(
+            model: SongDomain,
+            currentSongPlayingId: StringID?,
+            isPlaying: Boolean,
+            callback: (songId: StringID) -> Unit
+        ) = SongUi(
             id = model.id,
             albumId = model.albumId,
             title = TextValue(model.title),
             artist = TextValue(model.artist),
             albumPictureUrl = model.albumPictureUrl,
             isExplicit = model.isExplicit,
-            onClickListener = callback
+            onClickListener = callback,
+            isPlaying = model.id == currentSongPlayingId && isPlaying
         )
     }
 }
