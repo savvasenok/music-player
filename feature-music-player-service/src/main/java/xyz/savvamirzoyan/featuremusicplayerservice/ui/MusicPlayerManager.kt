@@ -37,9 +37,15 @@ class MusicPlayerManager @Inject constructor(
         }
 
         scope.launch {
-
             musicPlayerManagerUseCase.currentUserSelectedSongFlow.collect {
                 it?.also { playSong(it.id) }
+            }
+        }
+
+        scope.launch {
+            musicPlayerManagerUseCase.isPlayingFlow.collect { isPlaying ->
+                if (isPlaying) continuePlaying()
+                else pauseSong()
             }
         }
     }
@@ -59,36 +65,18 @@ class MusicPlayerManager @Inject constructor(
         musicServiceConnection.transportControls.seekTo(pos)
     }
 
-    //    fun playOrToggleSongs(songs: List<SongDomain>, toggle: Boolean = false) {
-//        scope.launch {
-//
-//            val songsService = songs.map { songDomainToSongServiceMapper.map(it) }
-//            val songService = songsService.first()
-//
-//            val playbackState = musicServiceConnection.playbackStateFlow.firstOrNull()
-//            val currentlyPlayingSong = musicPlayerManagerUseCase.currentUserSelectedSongFlow.firstOrNull()
-//            val isPrepared = playbackState?.isPrepared ?: false
-//
-//             // If player is already has some music to play (paused or playing)
-//            if (isPrepared) {
-//
-//            } else {
-//
-//            }
-//
-//            if (isPrepared && songService.mediaId == currentlyPlayingSong?.id) {
-//                playbackState?.let { state ->
-//                    when {
-//                        state.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
-//                        state.isPlayEnabled -> musicServiceConnection.transportControls.play()
-//                    }
-//                }
-//            } else {
-//                musicServiceConnection.transportControls.playFromMediaId(songService.mediaId, null)
-//            }
-//        }
-//    }
-//
+    private fun pauseSong() {
+        try {
+            musicServiceConnection.transportControls.pause()
+        } catch (e: UninitializedPropertyAccessException) {
+            // reached when app opens 1st time and it tries to stop music
+        }
+    }
+
+    private fun continuePlaying() {
+        musicServiceConnection.transportControls.play()
+    }
+
     private fun playSong(songID: StringID) {
         musicServiceConnection.transportControls.playFromMediaId(songID, null)
     }

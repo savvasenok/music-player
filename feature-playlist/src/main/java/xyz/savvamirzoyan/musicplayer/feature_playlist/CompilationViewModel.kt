@@ -16,8 +16,8 @@ import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongCompilationDomain
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import kotlin.random.Random
 
-class PlaylistViewModel @AssistedInject constructor(
-    @Assisted private val albumId: StringID,
+class CompilationViewModel @AssistedInject constructor(
+    @Assisted private val compilationId: StringID,
     private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager
 ) : CoreViewModel() {
 
@@ -47,16 +47,15 @@ class PlaylistViewModel @AssistedInject constructor(
 
     val isPlaylistPlaying: Flow<Boolean> = combine(
         musicPlayerManagerUseCase.currentSongFlow,
-        musicPlayerManagerUseCase.currentCompilationFlow,
         musicPlayerManagerUseCase.isPlayingFlow
-    ) { currentSong, currentCompilation, isPlaying ->
-        currentSong?.compilationId == currentCompilation?.id && isPlaying
+    ) { currentSong/*, currentCompilation*/, isPlaying ->
+        currentSong?.compilationId == compilationId && isPlaying
     }.distinctUntilChanged { old, new -> old == new }
 
     init {
         viewModelScope.launch {
             whileLoading {
-                musicPlayerManagerUseCase.getCompilation(albumId)
+                musicPlayerManagerUseCase.getCompilation(compilationId)
                     .also { compilation ->
                         when (compilation) {
                             is SongCompilationDomain.AlbumDomain -> PlaylistInfoUi(
@@ -109,30 +108,13 @@ class PlaylistViewModel @AssistedInject constructor(
 
     fun onPlayButtonClick() {
         viewModelScope.launch {
-
-//            val isPlaying = musicServiceConnection.isPlayingNowFlow.first()
-
-//            Log.d("SPAMEGGS", "isPlaying:$isPlaying")
-//
-//            viewModelScope.launch {
-//                musicPlayerManagerUseCase.getSongs(songId, albumId)
-//                    .also { songs -> musicPlayerManager.playOrToggleSongs(songs) }
-//            }
-
-//            musicPlayerManagerUseCase.getCompilation(albumId)
-//                ?.let { albumDomain -> musicPlayerManagerUseCase.getSongs(albumDomain.songs.first().id, albumId) }
-//                ?.also { songs -> musicPlayerManager.playOrToggleSongs(songs.songs) }
-
-//            musicPlayerManagerUseCase.getAlbum(albumId)?.songs
-//                ?.also {
-//                    musicPlayerManager.playOrToggleSongs(it, toggle = isPlaying)
-//                }
+            musicPlayerManagerUseCase.playCompilation(compilationId)
         }
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(albumId: StringID): PlaylistViewModel
+        fun create(compilationId: StringID): CompilationViewModel
     }
 
     companion object {

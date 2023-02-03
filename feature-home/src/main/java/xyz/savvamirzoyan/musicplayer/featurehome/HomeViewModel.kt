@@ -11,7 +11,9 @@ import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.ToolbarChipsStateUi
 import xyz.savvamirzoyan.musicplayer.usecasedatetime.DateTimeUseCase
+import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.PlayHistoryUseCase
+import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.model.LastPlayedPlaylistDomain
 import javax.inject.Inject
 
 private const val LAST_PLAYED_SONGS_COUNT = 5
@@ -22,6 +24,7 @@ internal class HomeViewModel @Inject constructor(
     private val playHistoryUseCase: PlayHistoryUseCase,
     private val currentPartOfDayToTextValueMapper: CurrentPartOfDayToTextValueMapper,
     private val lastPlayedPlaylistToLastPlaylistsStateMapper: LastPlayedPlaylistToLastPlaylistsStateMapper,
+    private val musicPlayerManager: UseCaseMusicPlayerManager,
     private val deepLinkBuilder: DeepLinkBuilder
 ) : CoreViewModel() {
 
@@ -39,8 +42,18 @@ internal class HomeViewModel @Inject constructor(
     private val _toolbarChipsStateFlow = MutableStateFlow(initToolbarChipsState)
     internal val toolbarChipsStateFlow: Flow<ToolbarChipsStateUi> = _toolbarChipsStateFlow
 
-    private val _playlistsStateFlow = MutableStateFlow(LastPlaylistsStateUi())
-    internal val playlistsStateFlow: Flow<LastPlaylistsStateUi> = _playlistsStateFlow
+    private val _lastPlayedCompilationsFlow = MutableStateFlow<List<LastPlayedPlaylistDomain>>(emptyList())
+    internal val lastPlayedCompilationsFlow: Flow<LastPlaylistsStateUi> =
+        combine(
+            _lastPlayedCompilationsFlow,
+            musicPlayerManager.currentCompilationFlow,
+            musicPlayerManager.isPlayingFlow
+        ) { lastPlayedCompilation, currentCompilation, isPlaying ->
+            lastPlayedPlaylistToLastPlaylistsStateMapper.map(
+                lastPlayedCompilation,
+                if (isPlaying) currentCompilation?.id else null
+            )
+        }
 
     private val _lastPlayedSongsIdsFlow = MutableSharedFlow<List<StringID>>(replay = 0)
     val lastPlayedSongsStateFlow: Flow<List<StringID>> = _lastPlayedSongsIdsFlow
@@ -51,7 +64,7 @@ internal class HomeViewModel @Inject constructor(
 
     init {
         setupGreetings()
-        setupLastPlayedPlaylists()
+        setupLastPlayedCompilations()
         setupLastPlayedSongs()
     }
 
@@ -63,12 +76,10 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun setupLastPlayedPlaylists() {
+    private fun setupLastPlayedCompilations() {
         viewModelScope.launch {
             whileLoading {
-                playHistoryUseCase.getLastPlayedPlaylists()
-                    .let { lastPlayedPlaylistToLastPlaylistsStateMapper.map(it) }
-                    .let { _playlistsStateFlow.emit(it) }
+                playHistoryUseCase.getLastPlayedPlaylists().let { _lastPlayedCompilationsFlow.emit(it) }
             }
         }
     }
@@ -81,9 +92,9 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onPlaylistClick(playlistIndex: Int) {
+    fun onCompilationClick(compilationIndex: Int) {
         viewModelScope.launch {
-            playHistoryUseCase.getLastPlayedPlaylists()[playlistIndex]
+            playHistoryUseCase.getLastPlayedPlaylists()[compilationIndex]
                 .let { playlist -> deepLinkBuilder.buildPlaylistDeepLink(playlist.id) }
                 .also { navigate(it) }
         }

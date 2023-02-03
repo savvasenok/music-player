@@ -13,24 +13,24 @@ import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.load
 import xyz.savvamirzoyan.musicplayer.appcore.setText
 import xyz.savvamirzoyan.musicplayer.appcore.setTitle
-import xyz.savvamirzoyan.musicplayer.feature_playlist.databinding.FragmentPlaylistBinding
+import xyz.savvamirzoyan.musicplayer.feature_playlist.databinding.FragmentCompilationBinding
 import xyz.savvamirzoyan.musicplayer.feature_songs_list.SongsListFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlaylistFragment : CoreFragment<FragmentPlaylistBinding>() {
+class CompilationFragment : CoreFragment<FragmentCompilationBinding>() {
 
     @Inject
-    lateinit var viewModelFactory: PlaylistViewModel.Factory
-    private val viewModel by viewModels<PlaylistViewModel>(factoryProducer = {
-        PlaylistViewModel.provideFactory(
+    lateinit var viewModelFactory: CompilationViewModel.Factory
+    private val viewModel by viewModels<CompilationViewModel>(factoryProducer = {
+        CompilationViewModel.provideFactory(
             viewModelFactory,
             arguments?.getString(KEY_PLAYLIST_ID) ?: throw IllegalArgumentException("No album id provided")
         )
     })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentPlaylistBinding.inflate(inflater, container, false)
+        binding = FragmentCompilationBinding.inflate(inflater, container, false)
         return binding.root
     }
 

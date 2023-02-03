@@ -1,6 +1,7 @@
 package xyz.savvamirzoyan.musicplayer.featurehome
 
 import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi
 import xyz.savvamirzoyan.musicplayer.usecaseplayhistory.model.LastPlayedPlaylistDomain
@@ -8,16 +9,16 @@ import javax.inject.Inject
 
 interface LastPlayedPlaylistToLastPlaylistsStateMapper {
 
-    fun map(models: List<LastPlayedPlaylistDomain>): LastPlaylistsStateUi
+    fun map(models: List<LastPlayedPlaylistDomain>, playingId: StringID?): LastPlaylistsStateUi
 
     class Base @Inject constructor() : LastPlayedPlaylistToLastPlaylistsStateMapper {
 
-        override fun map(models: List<LastPlayedPlaylistDomain>) = models
-            .map {
+        override fun map(models: List<LastPlayedPlaylistDomain>, playingId: StringID?) = models
+            .map { model ->
                 LastPlaylistStateUi(
-                    title = TextValue(it.title),
-                    pictureUrl = it.pictureUrl,
-                    isPlaying = false
+                    title = TextValue(model.title),
+                    pictureUrl = model.pictureUrl,
+                    isPlaying = model.id == playingId
                 )
             }.let {
                 LastPlaylistsStateUi(

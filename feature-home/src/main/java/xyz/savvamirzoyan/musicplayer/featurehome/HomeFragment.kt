@@ -35,33 +35,33 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
 
     private fun setupClickListeners() {
         binding.playlist1.root.setOnClickListener {
-            viewModel.onPlaylistClick(0)
+            viewModel.onCompilationClick(0)
         }
 
         binding.playlist2.root.setOnClickListener {
-            viewModel.onPlaylistClick(1)
+            viewModel.onCompilationClick(1)
         }
 
         binding.playlist3.root.setOnClickListener {
-            viewModel.onPlaylistClick(2)
+            viewModel.onCompilationClick(2)
         }
 
         binding.playlist4.root.setOnClickListener {
-            viewModel.onPlaylistClick(3)
+            viewModel.onCompilationClick(3)
         }
 
         binding.playlist5.root.setOnClickListener {
-            viewModel.onPlaylistClick(4)
+            viewModel.onCompilationClick(4)
         }
 
         binding.playlist6.root.setOnClickListener {
-            viewModel.onPlaylistClick(5)
+            viewModel.onCompilationClick(5)
         }
     }
 
     private fun setupFlowListeners() {
 
-        collect(viewModel.playlistsStateFlow) { state ->
+        collect(viewModel.lastPlayedCompilationsFlow) { state ->
             binding.playlist1.root.isVisible = state.isFirstVisible
             binding.playlist2.root.isVisible = state.isSecondVisible
             binding.playlist3.root.isVisible = state.isThirdVisible
@@ -70,39 +70,39 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
             binding.playlist6.root.isVisible = state.isSixthVisible
 
             if (state.isFirstVisible) {
-                binding.playlist1.ivPicture.load(state.first?.pictureUrl)
+                binding.playlist1.playableImageView.image.load(state.first?.pictureUrl)
+                binding.playlist1.playableImageView.setIsPlaying(state.first?.isPlaying ?: false)
                 state.first?.title?.let { binding.playlist1.tvTitle.setText(it) }
-                binding.playlist1.indicatorMusicPlaying.isVisible = state.first?.isPlaying ?: false
             }
 
             if (state.isSecondVisible) {
-                binding.playlist2.ivPicture.load(state.second?.pictureUrl)
+                binding.playlist2.playableImageView.image.load(state.second?.pictureUrl)
                 state.second?.title?.let { binding.playlist2.tvTitle.setText(it) }
-                binding.playlist2.indicatorMusicPlaying.isVisible = state.second?.isPlaying ?: false
+                binding.playlist2.playableImageView.setIsPlaying(state.second?.isPlaying ?: false)
             }
 
             if (state.isThirdVisible) {
-                binding.playlist3.ivPicture.load(state.third?.pictureUrl)
+                binding.playlist3.playableImageView.image.load(state.third?.pictureUrl)
                 state.third?.title?.let { binding.playlist3.tvTitle.setText(it) }
-                binding.playlist3.indicatorMusicPlaying.isVisible = state.third?.isPlaying ?: false
+                binding.playlist3.playableImageView.setIsPlaying(state.third?.isPlaying ?: false)
             }
 
             if (state.isFourthVisible) {
-                binding.playlist4.ivPicture.load(state.fourth?.pictureUrl)
+                binding.playlist4.playableImageView.image.load(state.fourth?.pictureUrl)
                 state.fourth?.title?.let { binding.playlist4.tvTitle.setText(it) }
-                binding.playlist4.indicatorMusicPlaying.isVisible = state.fourth?.isPlaying ?: false
+                binding.playlist4.playableImageView.setIsPlaying(state.fourth?.isPlaying ?: false)
             }
 
             if (state.isFifthVisible) {
-                binding.playlist5.ivPicture.load(state.fifth?.pictureUrl)
+                binding.playlist5.playableImageView.image.load(state.fifth?.pictureUrl)
                 state.fifth?.title?.let { binding.playlist5.tvTitle.setText(it) }
-                binding.playlist5.indicatorMusicPlaying.isVisible = state.fifth?.isPlaying ?: false
+                binding.playlist5.playableImageView.setIsPlaying(state.fifth?.isPlaying ?: false)
             }
 
             if (state.isSixthVisible) {
-                binding.playlist6.ivPicture.load(state.sixth?.pictureUrl)
+                binding.playlist6.playableImageView.image.load(state.sixth?.pictureUrl)
                 state.sixth?.title?.let { binding.playlist6.tvTitle.setText(it) }
-                binding.playlist6.indicatorMusicPlaying.isVisible = state.sixth?.isPlaying ?: false
+                binding.playlist6.playableImageView.setIsPlaying(state.sixth?.isPlaying ?: false)
             }
         }
 
