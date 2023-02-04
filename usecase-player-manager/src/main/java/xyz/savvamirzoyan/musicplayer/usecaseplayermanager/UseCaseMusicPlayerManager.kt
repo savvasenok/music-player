@@ -20,6 +20,7 @@ interface UseCaseMusicPlayerManager {
     val currentCompilationFlow: Flow<SongCompilationDomain?>
 
     val isPlayingFlow: Flow<Boolean>
+    val currentSongProgressFlow: Flow<Int>
 
     suspend fun getSong(songId: StringID): SongDomain
     suspend fun getCompilation(compilationId: StringID): SongCompilationDomain
@@ -27,12 +28,14 @@ interface UseCaseMusicPlayerManager {
     suspend fun pause()
     suspend fun play()
     suspend fun play(songId: StringID)
+    suspend fun playOrPause()
     suspend fun playCompilation(compilationId: StringID)
 
     suspend fun updatePlayingCurrentSong(songId: StringID)
     suspend fun onSongPlaying()
     suspend fun onSongPaused()
     suspend fun onSongCompilationEnd()
+    suspend fun onSongProgress(currentProgress: Float)
 
     class Base @Inject constructor(private val musicRepository: MusicRepository) : UseCaseMusicPlayerManager {
 
@@ -41,6 +44,9 @@ interface UseCaseMusicPlayerManager {
 
         private val _isPlayingFlow = MutableStateFlow(false)
         override val isPlayingFlow: Flow<Boolean> = _isPlayingFlow
+
+        private val _currentSongProgressFlow = MutableStateFlow(0)
+        override val currentSongProgressFlow: Flow<Int> = _currentSongProgressFlow
 
         private val _currentSongFlow = MutableStateFlow<SongDomain?>(null)
         override val currentSongFlow: Flow<SongDomain?> = _currentSongFlow
@@ -81,6 +87,11 @@ interface UseCaseMusicPlayerManager {
             play()
         }
 
+        override suspend fun playOrPause() {
+            val isPlaying = isPlayingFlow.first()
+            if (isPlaying) pause() else play()
+        }
+
         override suspend fun playCompilation(compilationId: StringID) {
             val isPlaying = isPlayingFlow.first()
             val currentCompilation = currentCompilationFlow.first()
@@ -111,6 +122,10 @@ interface UseCaseMusicPlayerManager {
         override suspend fun onSongCompilationEnd() {
             onSongPaused()
             // TODO: gonna change, when recommendations are implemented, so music continues playing after album ends
+        }
+
+        override suspend fun onSongProgress(currentProgress: Float) {
+            _currentSongProgressFlow.emit((currentProgress * 100).toInt())
         }
     }
 }

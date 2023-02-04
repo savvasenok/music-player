@@ -18,7 +18,6 @@ class MusicNotificationManager(
     private val context: Context,
     sessionToken: MediaSessionCompat.Token,
     notificationListener: NotificationListener,
-    private val newSongCallback: () -> Unit
 ) {
 
     private val notificationManager: PlayerNotificationManager

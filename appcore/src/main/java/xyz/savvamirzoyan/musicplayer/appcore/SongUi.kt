@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.musicplayer.feature_songs_list
+package xyz.savvamirzoyan.musicplayer.appcore
 
 import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.Model

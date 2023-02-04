@@ -1,22 +1,20 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
 }
 
 android {
-    namespace 'xyz.savvamirzoyan.musicplayer'
+    namespace 'xyz.savvamirzoyan.musicplayer.feature_mini_player'
     compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
-        applicationId "xyz.savvamirzoyan.musicplayer"
         minSdk rootProject.minSdkVersion
         targetSdk rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -40,15 +38,11 @@ android {
 
 dependencies {
 
-    implementation project(":core")
     implementation project(":appcore")
-    implementation project(":feature-home")
-    implementation project(":feature-music-player-service")
-    implementation project(":feature-mini-player")
+    implementation project(":core")
     implementation project(":usecase-player-manager")
-    implementation project(":data-music-repository")
 
-    implementation ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
+    implementation GLIDE, LIFECYCLE_VIEWMODEL, LIFECYCLE_RUNTIME, FRAGMENTS, ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
     kapt HILT_COMPILER
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation JUNIT

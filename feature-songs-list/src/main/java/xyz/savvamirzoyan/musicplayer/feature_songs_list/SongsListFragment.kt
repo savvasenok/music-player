@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.musicplayer.appcore.CoreDiffUtilsGetter
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
 import xyz.savvamirzoyan.musicplayer.appcore.CoreRecyclerViewAdapter
+import xyz.savvamirzoyan.musicplayer.appcore.SongUi
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.feature_songs_list.databinding.FragmentSongsListBinding
 import javax.inject.Inject

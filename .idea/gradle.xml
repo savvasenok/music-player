@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/data-music-repository" />
             <option value="$PROJECT_DIR$/feature-home" />
+            <option value="$PROJECT_DIR$/feature-mini-player" />
             <option value="$PROJECT_DIR$/feature-music-player-service" />
             <option value="$PROJECT_DIR$/feature-playlist" />
             <option value="$PROJECT_DIR$/feature-songs-list" />

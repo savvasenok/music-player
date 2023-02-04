@@ -150,7 +150,7 @@
                     android:layout_height="match_parent"
                     app:hideAnimationBehavior="outward"
                     app:showAnimationBehavior="inward"
-                    app:trackCornerRadius="4dp"
+                    app:trackCornerRadius="@dimen/progress_track_corner_radius"
                     app:trackThickness="2dp"
                     tools:progress="33" />
 

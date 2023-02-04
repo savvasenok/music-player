@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewHolder
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewHolderFingerprint
+import xyz.savvamirzoyan.musicplayer.appcore.SongUi
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.feature_songs_list.databinding.LayoutSongRowBinding
 

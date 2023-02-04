@@ -18,6 +18,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.featuremusicplayerservice.callbacks.MusicPlaybackPreparer
 import xyz.savvamirzoyan.featuremusicplayerservice.callbacks.MusicPlayerEventListener
 import xyz.savvamirzoyan.featuremusicplayerservice.callbacks.MusicPlayerNotificationListener
@@ -71,9 +73,7 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
             this,
             mediaSession.sessionToken,
             MusicPlayerNotificationListener(this)
-        ) {
-            currentSongDuration = exoPlayer.duration
-        }
+        )
 
         val musicPlaybackPreparer = MusicPlaybackPreparer(
             musicPlayerManager,
@@ -89,6 +89,18 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
         musicPlayerEventListener = MusicPlayerEventListener(this)
         exoPlayer.addListener(musicPlayerEventListener)
         musicNotificationManager.showNotification(exoPlayer)
+
+
+
+
+
+        serviceScope.launch {
+            while (true) {
+
+                delay(150)
+                musicPlayerManager.onSongProgress(exoPlayer.currentPosition.toFloat() / exoPlayer.duration.toFloat())
+            }
+        }
     }
 
     private fun preparePlayer(
@@ -135,8 +147,5 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
     companion object {
         private const val TAG_SERVICE = "SAVVASENOK_SPOTIFY_PLAYER"
         const val MEDIA_ROOT_ID = "root_id"
-
-        var currentSongDuration = 0L
-            private set
     }
 }
