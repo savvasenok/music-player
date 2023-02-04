@@ -1,6 +1,6 @@
 package xyz.savvamirzoyan.musicplayer.feature_playlist
 
-import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.Model
 import xyz.savvamirzoyan.musicplayer.core.PictureUrl
 

@@ -1,4 +1,4 @@
-package xyz.savvamirzoyan.musicplayer.appcore
+package xyz.savvamirzoyan.musicplayer.appcore.uistate
 
 import android.content.Context
 import androidx.annotation.PluralsRes

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Music Player</string>
     <string name="bottom_navigation_title_home">Home</string>
+
+    <string name="unexpected_error_occurred_title">Unexpected error occurred</string>
+    <string name="restart_app"><u>Restart app</u></string>
+    <string name="report">Report</string>
+    <string name="report_progress">Reporting…</string>
+    <string name="report_finish">Reported</string>
+    <string name="unexpected_error_occurred_description">Sorry for inconvenience\nPlease report this error to developer</string>
 </resources>

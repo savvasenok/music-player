@@ -7,13 +7,15 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
+import xyz.savvamirzoyan.musicplayer.appcore.uistate.ButtonState
+import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.PictureUrl
 
 fun ImageView.load(pictureUrl: PictureUrl?) = Glide.with(this.context)
     .load(pictureUrl)
     .transition(DrawableTransitionOptions.withCrossFade())
-//    .placeholder(R.drawable.image_template)
     .dontAnimate()
     .into(this)
 
@@ -21,6 +23,12 @@ fun MaterialTextView.setText(textValue: TextValue) {
     val value = textValue.getString(this.context)
     isVisible = value.isNotBlank()
     text = value
+}
+
+fun MaterialButton.setState(state: ButtonState) {
+    text = state.text.getString(context)
+    isEnabled = state.isEnabled
+    isVisible = state.isVisible
 }
 
 fun CollapsingToolbarLayout.setTitle(textValue: TextValue) {

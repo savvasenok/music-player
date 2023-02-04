@@ -27,6 +27,11 @@
                 android:value="" />
         </activity>
 
+        <activity
+            android:name=".crash.CrashActivity"
+            android:exported="false"
+            android:process=":error_handler" />
+
         <service
             android:name="xyz.savvamirzoyan.featuremusicplayerservice.MusicPlayerService"
             android:exported="true">

@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
-import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.usecase_core.model.SongCompilationDomain
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager

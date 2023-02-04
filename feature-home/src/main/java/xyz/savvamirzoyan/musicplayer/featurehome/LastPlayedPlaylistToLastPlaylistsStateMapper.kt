@@ -1,6 +1,6 @@
 package xyz.savvamirzoyan.musicplayer.featurehome
 
-import xyz.savvamirzoyan.musicplayer.appcore.TextValue
+import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistStateUi
 import xyz.savvamirzoyan.musicplayer.featurehome.model.LastPlaylistsStateUi

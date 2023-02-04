@@ -15,8 +15,8 @@
 
         <xyz.savvamirzoyan.musicplayer.appcore.widget.PlayableImageView
             android:id="@+id/playable_image_view"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_title"
