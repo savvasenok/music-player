@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="recyclerview_bottom_padding">172dp</dimen>
+    <dimen name="recyclerview_bottom_padding">236dp</dimen>
     <dimen name="playerFAB_corner_radius_is_playing">6dp</dimen>
     <dimen name="playerFAB_corner_radius_is_paused">16dp</dimen>
 

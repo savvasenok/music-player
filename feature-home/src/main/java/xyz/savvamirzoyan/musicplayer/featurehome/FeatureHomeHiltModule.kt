@@ -6,7 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import xyz.savvamirzoyan.musicplayer.feature_songs_list.SongDomainToUiMapper
+import xyz.savvamirzoyan.musicplayer.appcore.mapper.SongDomainToUiMapper
 
 @InstallIn(SingletonComponent::class)
 @Module

@@ -6,7 +6,7 @@ import xyz.savvamirzoyan.musicplayer.core.StringID
 
 sealed class SongCompilationDomain(
     val id: StringID,
-    val songs: List<SongDomain>
+    var songs: List<SongDomain>
 ) {
 
     class AlbumDomain(

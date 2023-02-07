@@ -79,38 +79,40 @@ class MusicPlayerService : MediaBrowserServiceCompat() {
             musicPlayerManager,
             serviceScope,
             songDomainToMediaMetadataMapper
-        ) { songs, songIndex -> preparePlayer(songs, songIndex) }
+        ) { songs, playWhenReady, songIndex -> preparePlayer(songs, playWhenReady, songIndex) }
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlaybackPreparer(musicPlaybackPreparer)
         mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
         mediaSessionConnector.setPlayer(exoPlayer)
 
-        musicPlayerEventListener = MusicPlayerEventListener(this)
+        musicPlayerEventListener = MusicPlayerEventListener(this, musicPlayerManager, serviceScope)
         exoPlayer.addListener(musicPlayerEventListener)
         musicNotificationManager.showNotification(exoPlayer)
-
-
-
-
 
         serviceScope.launch {
             while (true) {
 
-                delay(150)
-                musicPlayerManager.onSongProgress(exoPlayer.currentPosition.toFloat() / exoPlayer.duration.toFloat())
+                exoPlayer.mediaItemCount
+
+                delay(250)
+                musicPlayerManager.onSongProgress(
+                    exoPlayer.currentPosition.toInt(),
+                    exoPlayer.duration.toInt()
+                )
             }
         }
     }
 
     private fun preparePlayer(
         songs: List<MediaMetadataCompat>,
+        playWhenReady: Boolean,
         songIndex: Int,
     ) {
         exoPlayer.setMediaSource(musicSource.asMediaSource(songs, dataSourceFactory))
         exoPlayer.prepare()
         exoPlayer.seekTo(songIndex, 0L)
-        exoPlayer.playWhenReady = true
+        exoPlayer.playWhenReady = playWhenReady
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

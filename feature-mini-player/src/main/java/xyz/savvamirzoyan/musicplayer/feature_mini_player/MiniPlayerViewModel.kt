@@ -5,39 +5,33 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.featuremusicplayerservice.MusicServiceConnection
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.SongUi
-import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
+import xyz.savvamirzoyan.musicplayer.appcore.mapper.SongDomainToUiMapper
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Inject
 
 @HiltViewModel
 class MiniPlayerViewModel @Inject constructor(
-    private val musicPlayerManager: UseCaseMusicPlayerManager
+    private val musicPlayerManager: UseCaseMusicPlayerManager,
+    private val songDomainToUiMapper: SongDomainToUiMapper,
+    private val musicServiceConnection: MusicServiceConnection
 ) : CoreViewModel() {
 
     val currentSongFlow: Flow<SongUi> = combine(
         musicPlayerManager.currentSongFlow.filterNotNull(),
         musicPlayerManager.isPlayingFlow
-    ) { song, isPlaying ->
-        SongUi(
-            id = song.id,
-            albumId = song.albumId,
-            title = TextValue(song.title),
-            artist = TextValue(song.artist),
-            albumPictureUrl = song.albumPictureUrl,
-            isExplicit = song.isExplicit,
-            onClickListener = {},
-            isPlaying = isPlaying
-        )
-    }
+    ) { song, isPlaying -> songDomainToUiMapper.map(song, song.id, isPlaying) {} }
 
     val currentSongProgressFlow: Flow<Int> = musicPlayerManager.currentSongProgressFlow
 
     fun onButtonPlayClick() {
         viewModelScope.launch {
-            musicPlayerManager.playOrPause()
+            if (musicPlayerManager.isPlayingFlow.firstOrNull() == true) musicServiceConnection.transportControls.pause()
+            else musicServiceConnection.transportControls.play()
         }
     }
 }

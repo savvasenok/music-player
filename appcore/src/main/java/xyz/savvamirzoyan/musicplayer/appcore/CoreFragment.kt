@@ -23,7 +23,7 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
     private var toolbarHeight: Float = 0f
     protected lateinit var binding: VB
-    private val coreActivity: CoreActivity
+    protected val coreActivity: CoreActivity
         get() = (requireActivity() as CoreActivity)
 
     @Suppress("SameParameterValue")
@@ -33,6 +33,18 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
 
     private fun launchWhenCreated(function: suspend CoroutineScope.() -> Unit) {
         coroutine(Lifecycle.State.CREATED, function)
+    }
+
+    private fun launchWhenStarted(function: suspend CoroutineScope.() -> Unit) {
+        coroutine(Lifecycle.State.STARTED, function)
+    }
+
+    protected fun <T> collectStarted(flow: Flow<T>, function: suspend CoroutineScope.(T) -> Unit) {
+        launchWhenStarted {
+            flow.collect {
+                function(it)
+            }
+        }
     }
 
     protected fun <T> collect(flow: Flow<T>, function: suspend CoroutineScope.(T) -> Unit) {
@@ -87,6 +99,58 @@ abstract class CoreFragment<VB : ViewBinding> : Fragment() {
             val alpha = 1 + (verticalOffset / toolbarHeight)
             toolbar.alpha = alpha
         })
+    }
+
+    fun setupFragmentWithTopInsects() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. Here the system is setting
+            // only the bottom, left, and right dimensions, but apply whichever insets are
+            // appropriate to your layout. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = insets.top
+            }
+
+            // Return CONSUMED if you don't want want the window insets to keep being
+            // passed down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    fun setupFragmentWithTopBottomInsects() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. Here the system is setting
+            // only the bottom, left, and right dimensions, but apply whichever insets are
+            // appropriate to your layout. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = insets.top
+                bottomMargin = insets.bottom
+            }
+
+            // Return CONSUMED if you don't want want the window insets to keep being
+            // passed down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    fun setupFragmentWithBottomInsects() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. Here the system is setting
+            // only the bottom, left, and right dimensions, but apply whichever insets are
+            // appropriate to your layout. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.bottom
+            }
+
+            // Return CONSUMED if you don't want want the window insets to keep being
+            // passed down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     fun setupFragment(toolbar: MaterialToolbar) {

@@ -27,6 +27,11 @@ class CrashActivity : CoreActivity() {
         setContentView(binding.root)
     }
 
+    override fun hideMiniPlayer() = Unit
+    override fun showMiniPlayer() = Unit
+    override fun hideBottomNavigation() = Unit
+    override fun showBottomNavigation() = Unit
+
     private fun setFlowListeners() {
         lifecycleScope.launch {
             viewModel.actionFinishActivityFlow.collect { finishAffinity() }

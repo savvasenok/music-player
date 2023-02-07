@@ -7,12 +7,13 @@ import javax.inject.Inject
 
 interface SongDeezerDataToSongDomainMapper : Mapper {
 
-    fun map(model: SongDeezerData): SongDomain
+    fun map(model: SongDeezerData, indexInCompilation: Int): SongDomain
 
     class Base @Inject constructor() : SongDeezerDataToSongDomainMapper {
 
-        override fun map(model: SongDeezerData) = SongDomain(
+        override fun map(model: SongDeezerData, indexInCompilation: Int) = SongDomain(
             id = model.id.toString(),
+            indexInCompilation = indexInCompilation,
             title = model.title,
             artist = model.artist.name,
             albumPictureUrl = model.album.coverMedium,

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_activity_main_bottom_navigation.xml"
-    app:startDestination="@id/HomeFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/HomeFragment"
+        android:id="@+id/homeFragment"
         android:name="xyz.savvamirzoyan.musicplayer.featurehome.HomeFragment"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
@@ -14,5 +14,6 @@
         app:popExitAnim="@anim/nav_default_pop_exit_anim"
         tools:layout="@layout/fragment_home" />
 
-    <include app:graph="@navigation/navigation_playlist" />
+    <include app:graph="@navigation/navigation_compilation" />
+    <include app:graph="@navigation/navigation_fullscale_player" />
 </navigation>

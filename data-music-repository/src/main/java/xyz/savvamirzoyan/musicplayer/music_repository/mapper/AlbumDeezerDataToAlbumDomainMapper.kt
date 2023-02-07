@@ -19,7 +19,8 @@ interface AlbumDeezerDataToAlbumDomainMapper : Mapper {
             authorName = model.artist?.name ?: "NO DATA",
             authorPictureUrl = model.artist?.pictureXl,
             description = null,
-            songs = model.tracks?.data?.map { songDeezerDomainToSongDomainMapper.map(it) } ?: emptyList(),
+            songs = model.tracks?.data
+                ?.mapIndexed { index, song -> songDeezerDomainToSongDomainMapper.map(song, index) } ?: emptyList(),
             coverPictureUrl = model.coverXl,
             fans = model.fans ?: 0
         )

@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import xyz.savvamirzoyan.featuremusicplayerservice.ui.MusicPlayer
 import xyz.savvamirzoyan.musicplayer.appcore.CoreViewModel
 import xyz.savvamirzoyan.musicplayer.appcore.uistate.TextValue
 import xyz.savvamirzoyan.musicplayer.core.StringID
@@ -18,7 +19,8 @@ import kotlin.random.Random
 
 class CompilationViewModel @AssistedInject constructor(
     @Assisted private val compilationId: StringID,
-    private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager
+    private val musicPlayerManagerUseCase: UseCaseMusicPlayerManager,
+    private val musicPlayer: MusicPlayer
 ) : CoreViewModel() {
 
     private val _playlistInfoFlow = MutableStateFlow<PlaylistInfoUi?>(null)
@@ -108,7 +110,15 @@ class CompilationViewModel @AssistedInject constructor(
 
     fun onPlayButtonClick() {
         viewModelScope.launch {
-            musicPlayerManagerUseCase.playCompilation(compilationId)
+
+            val isCurrentCompilationPlaying =
+                compilationId == musicPlayerManagerUseCase.currentCompilationFlow.firstOrNull()?.id
+
+            if (isCurrentCompilationPlaying) {
+                musicPlayer.togglePlay()
+            } else {
+                musicPlayerManagerUseCase.playCompilation(compilationId)
+            }
         }
     }
 

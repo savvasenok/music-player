@@ -120,7 +120,7 @@ class HomeFragment : CoreFragment<FragmentHomeBinding>() {
             binding.chipPodcastsAndShows.isSelected = it.isPodcastsAndShowsChipSelected
         }
 
-        collect(viewModel.lastPlayedSongsStateFlow) {
+        collectStarted(viewModel.lastPlayedSongsStateFlow) {
             val fragment = SongsListFragment.newInstance(it)
             childFragmentManager.beginTransaction().add(binding.fragmentSongsList.id, fragment).commit()
         }

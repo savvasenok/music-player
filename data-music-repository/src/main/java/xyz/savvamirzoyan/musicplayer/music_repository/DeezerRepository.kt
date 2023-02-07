@@ -21,7 +21,7 @@ interface DeezerRepository {
 
         override suspend fun getSong(songId: StringID): SongDomain? = deezerApiService
             .getSong(songId)
-            ?.let { songDeezerDataToSongDomainMapper.map(it) }
+            ?.let { songDeezerDataToSongDomainMapper.map(it, -1) }
 
         override suspend fun getAlbum(albumId: StringID): SongCompilationDomain.AlbumDomain? = deezerApiService
             .getAlbum(albumId)

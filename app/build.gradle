@@ -45,6 +45,7 @@ dependencies {
     implementation project(":feature-home")
     implementation project(":feature-music-player-service")
     implementation project(":feature-mini-player")
+    implementation project(":feature-fullscale-player")
     implementation project(":usecase-player-manager")
     implementation project(":data-music-repository")
 

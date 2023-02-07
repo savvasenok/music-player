@@ -17,7 +17,7 @@ class MusicPlaybackPreparer(
     private val musicPlayerManager: UseCaseMusicPlayerManager,
     private val scope: CoroutineScope,
     private val songDomainToMediaMetadataMapper: SongDomainToMediaMetadataMapper,
-    private val playerPrepared: (songs: List<MediaMetadataCompat>, songIndex: Int) -> Unit
+    private val playerPrepared: (songs: List<MediaMetadataCompat>, playWhenReady: Boolean, songIndex: Int) -> Unit
 ) : MediaSessionConnector.PlaybackPreparer {
 
     override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
@@ -35,7 +35,7 @@ class MusicPlaybackPreparer(
             (musicPlayerManager.currentCompilationFlow.firstOrNull()?.songs ?: emptyList())
                 .also { songs -> songIndex = songs.indexOfFirst { song -> song.id == mediaId } }
                 .map { song -> songDomainToMediaMetadataMapper.map(song) }
-                .also { playerPrepared(it, songIndex) }
+                .also { playerPrepared(it, playWhenReady, songIndex) }
         }
     }
 

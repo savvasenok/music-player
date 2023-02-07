@@ -8,6 +8,7 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import xyz.savvamirzoyan.featuremusicplayerservice.ui.MusicPlayer
 import xyz.savvamirzoyan.musicplayer.usecaseplayermanager.UseCaseMusicPlayerManager
 import javax.inject.Singleton
 
@@ -50,13 +52,16 @@ abstract class ServiceHiltModule {
         fun provideDataSourceFactory(
             @ApplicationContext context: Context
         ) = DefaultDataSourceFactory(context, Util.getUserAgent(context, "Spotify App"))
-
     }
 }
 
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class ApplicationHiltModule {
+
+    @Singleton
+    @Binds
+    abstract fun bindMusicPlayer(base: MusicPlayer.Base): MusicPlayer
 
     companion object {
 

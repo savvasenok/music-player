@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'xyz.savvamirzoyan.musicplayer.feature_fullscale_player'
+    compileSdk rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.minSdkVersion
+        targetSdk rootProject.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation project(":appcore")
+    implementation project(":core")
+    implementation project(":feature-music-player-service")
+    implementation project(":usecase-player-manager")
+
+    implementation GLIDE, LIFECYCLE_VIEWMODEL, LIFECYCLE_RUNTIME, FRAGMENTS, ANDROIDX_CORE_KTX, APPCOMPAT, MATERIAL_DESIGN, HILT, NAVIGATION_FRAGMENT, NAVIGATION_UI
+    kapt HILT_COMPILER
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation JUNIT
+    androidTestImplementation TEST_EXT_JUNIT
+    androidTestImplementation ESPRESSO
+}

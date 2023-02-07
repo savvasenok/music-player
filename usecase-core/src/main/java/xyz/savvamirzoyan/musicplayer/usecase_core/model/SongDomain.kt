@@ -7,6 +7,7 @@ import xyz.savvamirzoyan.musicplayer.core.StringID
 
 data class SongDomain(
     val id: StringID,
+    val indexInCompilation: Int,
     val title: String,
     val artist: String,
     val albumPictureUrl: PictureUrl,

@@ -2,18 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation_playlist"
-    app:startDestination="@id/playlistFragment">
+    android:id="@+id/navigation_fullscale_player"
+    app:startDestination="@id/fullscalePlayerFragment">
 
     <fragment
-        android:id="@+id/playlistFragment"
-        android:name="xyz.savvamirzoyan.musicplayer.feature_playlist.CompilationFragment"
+        android:id="@+id/fullscalePlayerFragment"
+        android:name="xyz.savvamirzoyan.musicplayer.feature_fullscale_player.FragmentFullscalePlayer"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim"
         app:popEnterAnim="@anim/nav_default_pop_enter_anim"
         app:popExitAnim="@anim/nav_default_pop_exit_anim"
-        tools:layout="@layout/fragment_compilation">
+        tools:layout="@layout/fragment_fullscale_player">
 
-        <deepLink app:uri="savvasenok-player://playlist?playlist_id={KEY_PLAYLIST_ID}" />
+        <deepLink app:uri="savvasenok-player://fullscale-player" />
     </fragment>
 </navigation>

@@ -7,6 +7,11 @@ import androidx.core.view.WindowCompat
 
 abstract class CoreActivity : AppCompatActivity() {
 
+    abstract fun hideMiniPlayer()
+    abstract fun hideBottomNavigation()
+    abstract fun showMiniPlayer()
+    abstract fun showBottomNavigation()
+
     // counts how many time loader was requested
     private var loadersCounter: Int = 0
         set(value) {

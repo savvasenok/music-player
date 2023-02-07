@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.savvamirzoyan.musicplayer.appcore.CoreFragment
@@ -28,6 +29,11 @@ class FragmentMiniPlayer : CoreFragment<FragmentMiniPlayerBinding>() {
 
         setupFlowListeners()
         setupClickListeners()
+        setupScrollingTitle()
+    }
+
+    private fun setupScrollingTitle() {
+        binding.tvSongTitle.isSelected = true
     }
 
     private fun setupFlowListeners() {
@@ -54,6 +60,7 @@ class FragmentMiniPlayer : CoreFragment<FragmentMiniPlayerBinding>() {
     }
 
     private fun setupMiniPlayer(song: SongUi) {
+        binding.root.isVisible = true
         binding.ivPicture.load(song.albumPictureUrl)
         binding.tvSongTitle.setText(song.title)
         binding.tvSongAuthor.setText(song.artist)

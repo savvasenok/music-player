@@ -13,9 +13,6 @@ class GlobalExceptionHandler private constructor(
 
     override fun uncaughtException(p0: Thread, p1: Throwable) {
         try {
-
-            Log.d("SPAMEGGS", "HELLO")
-
             launchActivity(applicationContext, activityToBeLaunched, p1)
             exitProcess(0)
         } catch (e: Exception) {

@@ -23,10 +23,10 @@ class MusicServiceConnection @Inject constructor(
 
     lateinit var mediaController: MediaControllerCompat
 
-    private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
-
     val transportControls: MediaControllerCompat.TransportControls
         get() = mediaController.transportControls
+
+    private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
 
     private val mediaBrowser = MediaBrowserCompat(
         context,
@@ -34,14 +34,6 @@ class MusicServiceConnection @Inject constructor(
         mediaBrowserConnectionCallback,
         null
     ).apply { connect() }
-
-    fun subscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
-        mediaBrowser.subscribe(parentId, callback)
-    }
-
-    fun unsubscribe(parentId: String, callback: MediaBrowserCompat.SubscriptionCallback) {
-        mediaBrowser.unsubscribe(parentId, callback)
-    }
 
     private inner class MediaBrowserConnectionCallback(
         private val context: Context
@@ -66,6 +58,15 @@ class MusicServiceConnection @Inject constructor(
                     PlaybackStateCompat.STATE_PLAYING -> musicPlayerManager.onSongPlaying()
                     PlaybackStateCompat.STATE_PAUSED -> musicPlayerManager.onSongPaused()
                     PlaybackStateCompat.STATE_STOPPED -> musicPlayerManager.onSongCompilationEnd()
+                    PlaybackStateCompat.STATE_NONE -> {}
+                    PlaybackStateCompat.STATE_ERROR -> {}
+                    PlaybackStateCompat.STATE_BUFFERING -> {}
+                    PlaybackStateCompat.STATE_REWINDING -> {}
+                    PlaybackStateCompat.STATE_CONNECTING -> {}
+                    PlaybackStateCompat.STATE_FAST_FORWARDING -> {}
+                    PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {}
+                    PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS -> {}
+                    PlaybackStateCompat.STATE_SKIPPING_TO_QUEUE_ITEM -> {}
                 }
             }
         }
